@@ -250,8 +250,23 @@ export function useProfile(selectedVendorId: string) {
   // Mutation khởi chạy profile
   const launchProfileMutation = useMutation({
     mutationFn: (profileId: string) => ProfileFunctionalService.launchProfile(profileId),
-    onSuccess: (result) => { /* ... xử lý toast ... */ },
-    onError: (error: Error) => { /* ... xử lý toast ... */ }
+    onSuccess: (result) => {
+      console.log('✅ Profile launched successfully:', result);
+      toast({
+        title: "Profile Launched",
+        description: result.message || "The profile has been launched successfully.",
+      });
+      // Invalidar la query para actualizar el estado del perfil en la UI
+      queryClient.invalidateQueries({ queryKey: ['/api/local/standard/profiles'] });
+    },
+    onError: (error: Error) => {
+      console.error('❌ Error launching profile:', error);
+      toast({
+        title: "Launch Failed",
+        description: error.message || "Failed to launch the profile. Please try again.",
+        variant: "destructive",
+      });
+    }
   });
 
   // Thêm mutation cho Kịch bản 2

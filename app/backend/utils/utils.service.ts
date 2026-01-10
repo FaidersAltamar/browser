@@ -4,15 +4,119 @@ import fs from "fs-extra";
 import path from "path";
 import { config } from "../config/env";
 import { FingerprintData } from "../models/Profile"; // Giả sử bạn có một interface cho fingerprint
+import { execSync } from "child_process";
 
-const getProfileDataPath = (profileId: string) => {
+const getProfileDataPath = (profileId: string | number) => {
+  // Ensure profileId is always a string
+  const profileIdString = String(profileId);
   const profileDataDir = config.PROFILE_DATA_DIR.startsWith('./') ?
     path.join(process.cwd(), config.PROFILE_DATA_DIR.slice(2)) :
     config.PROFILE_DATA_DIR;
-  return path.join(profileDataDir, profileId);
+  return path.join(profileDataDir, profileIdString);
 };
 
 export class UtilService {
+  /**
+   * Verifica si Chromium está disponible para ser usado
+   * Intenta verificar la ruta personalizada primero, luego el Chromium de Playwright
+   */
+  static async checkChromiumAvailable(): Promise<{ available: boolean; executablePath?: string; error?: string }> {
+    try {
+      // Primero verificar si hay una ruta personalizada de Chromium
+      if (config.CUSTOM_CHROMIUM_PATH && fs.existsSync(config.CUSTOM_CHROMIUM_PATH)) {
+        console.log(`✅ Custom Chromium found at: ${config.CUSTOM_CHROMIUM_PATH}`);
+        return { 
+          available: true, 
+          executablePath: config.CUSTOM_CHROMIUM_PATH 
+        };
+      }
+
+      // Si no hay ruta personalizada, verificar si Playwright tiene Chromium instalado
+      console.log('🔍 Checking for Playwright Chromium...');
+      try {
+        // Intentar obtener la ruta del ejecutable de Chromium
+        let chromiumExecutable: string | undefined;
+        try {
+          // Método 1: Usar executablePath() si está disponible
+          if (typeof playwright.chromium.executablePath === 'function') {
+            chromiumExecutable = playwright.chromium.executablePath();
+          }
+        } catch (e) {
+          // Si executablePath() no está disponible, intentar lanzar para verificar
+          console.log('⚠️ executablePath() no disponible, intentando verificar lanzando...');
+        }
+
+        // Si tenemos una ruta, verificar que exista
+        if (chromiumExecutable && fs.existsSync(chromiumExecutable)) {
+          console.log(`✅ Playwright Chromium found at: ${chromiumExecutable}`);
+          return { 
+            available: true, 
+            executablePath: chromiumExecutable 
+          };
+        }
+
+        // Si no tenemos ruta pero playwright.chromium existe, asumimos que está disponible
+        // Playwright manejará la instalación automáticamente al intentar lanzar
+        if (playwright.chromium) {
+          console.log('✅ Playwright Chromium disponible (se instalará automáticamente si es necesario)');
+          return { 
+            available: true 
+          };
+        }
+      } catch (playwrightError: any) {
+        console.warn('⚠️ Error verificando Playwright Chromium:', playwrightError.message);
+        
+        // Intentar instalar Chromium automáticamente
+        console.log('📦 Intentando instalar Playwright Chromium...');
+        try {
+          // Usar el comando de instalación de Playwright
+          execSync('npx playwright install chromium', { 
+            stdio: 'inherit',
+            timeout: 300000, // 5 minutos timeout
+            cwd: process.cwd()
+          });
+          console.log('✅ Chromium instalado exitosamente');
+          
+          // Verificar nuevamente después de la instalación
+          try {
+            if (typeof playwright.chromium.executablePath === 'function') {
+              const chromiumExecutable = playwright.chromium.executablePath();
+              if (chromiumExecutable && fs.existsSync(chromiumExecutable)) {
+                return { 
+                  available: true, 
+                  executablePath: chromiumExecutable 
+                };
+              }
+            }
+            // Si no podemos obtener la ruta, asumimos que está disponible
+            return { available: true };
+          } catch (verifyError) {
+            // Si aún así no podemos verificar, asumimos que está disponible
+            console.log('⚠️ No se pudo verificar la ruta, pero Chromium debería estar instalado');
+            return { available: true };
+          }
+        } catch (installError: any) {
+          console.error('❌ Error al instalar Chromium:', installError.message);
+          return { 
+            available: false, 
+            error: `Chromium no está disponible y no se pudo instalar automáticamente. Por favor, ejecuta manualmente: npx playwright install chromium. Error: ${installError.message}` 
+          };
+        }
+      }
+
+      return { 
+        available: false, 
+        error: 'Chromium no está disponible. Por favor, ejecuta: npx playwright install chromium' 
+      };
+    } catch (error: any) {
+      console.error('❌ Error checking Chromium availability:', error);
+      return { 
+        available: false, 
+        error: `Error al verificar Chromium: ${error.message}` 
+      };
+    }
+  }
+
   static async getProxyAddress(proxyId: number): Promise<string | undefined> {
     try {
       const proxy = await ProxyModel.findById(proxyId);
@@ -24,7 +128,22 @@ export class UtilService {
   }
 
   static async launch(profile: any, options: any = {}) {
-    const profileDataDir = getProfileDataPath(profile.id);
+    // Verificar que Chromium esté disponible antes de intentar lanzar
+    const profileId = profile?.id ?? profile?.profileId ?? null;
+    if (!profileId) {
+      throw new Error('Profile ID is required but was not provided');
+    }
+    const profileIdString = String(profileId);
+    console.log(`🔍 Verificando disponibilidad de Chromium para el perfil ${profileIdString}...`);
+    const chromiumCheck = await this.checkChromiumAvailable();
+    
+    if (!chromiumCheck.available) {
+      const errorMessage = chromiumCheck.error || 'Chromium no está disponible';
+      console.error(`❌ ${errorMessage}`);
+      throw new Error(errorMessage);
+    }
+
+    const profileDataDir = getProfileDataPath(profileIdString);
     fs.ensureDirSync(profileDataDir);
 
     const browserType = playwright.chromium;
@@ -75,20 +194,40 @@ export class UtilService {
       };
     }
 
-    const context = await browserTypeInstance.launchPersistentContext(
-      profileDataDir,
-      {
-        headless: options.headless ?? false,
-        // args: launchArgs,
-        // proxy: proxyConfig,
-        executablePath: config.CUSTOM_CHROMIUM_PATH,
-      },
-    );
+    // Build launch options
+    const launchOptions: any = {
+      headless: options.headless ?? false,
+      // args: launchArgs,
+      // proxy: proxyConfig,
+    };
 
-    const page = await context.newPage();
-    await page.goto("about:blank");
+    // Usar la ruta de Chromium encontrada (personalizada o de Playwright)
+    if (chromiumCheck.executablePath) {
+      console.log(`✅ Usando Chromium en: ${chromiumCheck.executablePath}`);
+      launchOptions.executablePath = chromiumCheck.executablePath;
+    } else if (config.CUSTOM_CHROMIUM_PATH && fs.existsSync(config.CUSTOM_CHROMIUM_PATH)) {
+      console.log(`✅ Usando ruta personalizada de Chromium: ${config.CUSTOM_CHROMIUM_PATH}`);
+      launchOptions.executablePath = config.CUSTOM_CHROMIUM_PATH;
+    } else {
+      console.log(`ℹ️ Usando Chromium por defecto de Playwright`);
+      // Playwright usará su Chromium integrado
+    }
 
-    return { context, page, browser: context.browser() };
+    try {
+      const context = await browserTypeInstance.launchPersistentContext(
+        profileDataDir,
+        launchOptions,
+      );
+
+      const page = await context.newPage();
+      await page.goto("about:blank");
+
+      console.log(`✅ Perfil ${profileIdString} lanzado exitosamente con Chromium`);
+      return { context, page, browser: context.browser() };
+    } catch (error: any) {
+      console.error(`❌ Error al lanzar Chromium para el perfil ${profileIdString}:`, error.message);
+      throw new Error(`No se pudo lanzar Chromium: ${error.message}. Asegúrate de que Chromium esté instalado correctamente.`);
+    }
   }
 
   /**
@@ -190,7 +329,18 @@ static buildLaunchArgsFromFingerprint(
    */
   static async launchTest(options: { headless?: boolean } = {}) {
     try {
-      console.log("Launching a minimal browser for testing...");
+      console.log("🔍 Verificando disponibilidad de Chromium para pruebas...");
+      
+      // Verificar que Chromium esté disponible
+      const chromiumCheck = await this.checkChromiumAvailable();
+      
+      if (!chromiumCheck.available) {
+        const errorMessage = chromiumCheck.error || 'Chromium no está disponible para pruebas';
+        console.error(`❌ ${errorMessage}`);
+        throw new Error(errorMessage);
+      }
+
+      console.log("✅ Lanzando navegador mínimo para pruebas...");
 
       // 1. Chọn trình duyệt mặc định (chromium là lựa chọn an toàn nhất)
       const browserType = playwright.chromium;
@@ -202,26 +352,34 @@ static buildLaunchArgsFromFingerprint(
         '--disable-dev-shm-usage',
       ];
 
-      // 3. Khởi chạy trình duyệt
-      // Dùng `browserType.launch` thay vì `launchPersistentContext` để không lưu lại dữ liệu
-      const browser = await browserType.launch({
+      // 3. Configurar la ruta de Chromium
+      const launchOptions: any = {
         headless: options.headless ?? false, // Mặc định là có giao diện
         args: launchArgs,
-        executablePath: config.CUSTOM_CHROMIUM_PATH,
-      });
+      };
 
-      // 4. Tạo một context và một trang mới
+      if (chromiumCheck.executablePath) {
+        launchOptions.executablePath = chromiumCheck.executablePath;
+      } else if (config.CUSTOM_CHROMIUM_PATH && fs.existsSync(config.CUSTOM_CHROMIUM_PATH)) {
+        launchOptions.executablePath = config.CUSTOM_CHROMIUM_PATH;
+      }
+
+      // 4. Khởi chạy trình duyệt
+      // Dùng `browserType.launch` thay vì `launchPersistentContext` để không lưu lại dữ liệu
+      const browser = await browserType.launch(launchOptions);
+
+      // 5. Tạo một context và một trang mới
       const context = await browser.newContext();
       const page = await context.newPage();
 
-      console.log("Test browser launched successfully.");
+      console.log("✅ Navegador de prueba lanzado exitosamente.");
 
-      // 5. Trả về các đối tượng cần thiết
+      // 6. Trả về các đối tượng cần thiết
       return { context, page, browser };
 
     } catch (error: any) {
-      console.error("Failed to launch test browser:", error);
-      throw new Error(`Could not launch test browser: ${error.message}`);
+      console.error("❌ Error al lanzar navegador de prueba:", error);
+      throw new Error(`No se pudo lanzar el navegador de prueba: ${error.message}`);
     }
   }
 }

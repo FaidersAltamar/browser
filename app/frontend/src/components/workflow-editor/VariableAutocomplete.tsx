@@ -56,7 +56,7 @@ export default function VariableAutocomplete({
     const systemVars = [
       { name: 'currentUrl', value: '', type: 'string', description: 'URL hiện tại của trang' },
       { name: 'timestamp', value: '', type: 'number', description: 'Thời gian hiện tại' },
-      { name: 'randomId', value: '', type: 'string', description: 'ID ngẫu nhiên' },
+      { name: 'randomId', value: '', type: 'string', description: 'ID aleatorio' },
       { name: 'userAgent', value: '', type: 'string', description: 'User Agent của trình duyệt' }
     ];
     

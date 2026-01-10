@@ -68,29 +68,29 @@ export function CustomHeader() {
     const path = location || "";
 
     if (path === "/")
-      return { name: "Trang chủ", icon: <Home className="h-5 w-5 mr-2" /> };
+      return { name: "Inicio", icon: <Home className="h-5 w-5 mr-2" /> };
     if (path === "/profile")
-      return { name: "Hồ sơ", icon: <User className="h-5 w-5 mr-2" /> };
+      return { name: "Perfiles", icon: <User className="h-5 w-5 mr-2" /> };
     if (path === "/network")
-      return { name: "Mạng lưới", icon: <Network className="h-5 w-5 mr-2" /> };
+      return { name: "Red", icon: <Network className="h-5 w-5 mr-2" /> };
     if (path === "/automation")
       return {
-        name: "Tự động hóa",
+        name: "Automatización",
         icon: <LayoutList className="h-5 w-5 mr-2" />,
       };
     if (path === "/store")
-      return { name: "Cửa hàng", icon: <Store className="h-5 w-5 mr-2" /> };
+      return { name: "Tienda", icon: <Store className="h-5 w-5 mr-2" /> };
     if (path === "/deposit")
       return {
-        name: "Nạp tiền",
+        name: "Depositar",
         icon: <CreditCard className="h-5 w-5 mr-2" />,
       };
     if (path === "/guide")
-      return { name: "Hướng dẫn", icon: <FileText className="h-5 w-5 mr-2" /> };
+      return { name: "Guía", icon: <FileText className="h-5 w-5 mr-2" /> };
     if (path === "/settings")
-      return { name: "Cài đặt", icon: <Settings className="h-5 w-5 mr-2" /> };
+      return { name: "Configuración", icon: <Settings className="h-5 w-5 mr-2" /> };
 
-    return { name: "Trang khác", icon: <Package className="h-5 w-5 mr-2" /> };
+    return { name: "Otra página", icon: <Package className="h-5 w-5 mr-2" /> };
   };
 
   const currentPage = getCurrentPage();
@@ -166,7 +166,7 @@ export function CustomHeader() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-60">
-              <DropdownMenuLabel>Tài khoản của tôi</DropdownMenuLabel>
+              <DropdownMenuLabel>Mi cuenta</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="cursor-pointer">
                 <Avatar className="h-8 w-8 mr-2">
@@ -176,10 +176,10 @@ export function CustomHeader() {
                 </Avatar>
                 <div className="flex flex-col">
                   <span className="font-medium">
-                    {user?.username || "User"}
+                    {user?.username || "Usuario"}
                   </span>
                   <span className="text-xs text-gray-500 dark:text-gray-400">
-                    {user?.firstName || ""} {user?.lastName || "Premium User"}
+                    {user?.firstName || ""} {user?.lastName || "Usuario Premium"}
                   </span>
                 </div>
               </DropdownMenuItem>
@@ -188,7 +188,7 @@ export function CustomHeader() {
                 <Link href="/profile">
                   <div className="flex items-center w-full">
                     <User className="h-4 w-4 mr-2" />
-                    <span>Thông tin tài khoản</span>
+                    <span>Información de la cuenta</span>
                   </div>
                 </Link>
               </DropdownMenuItem>
@@ -196,7 +196,7 @@ export function CustomHeader() {
                 <Link href="/settings">
                   <div className="flex items-center w-full">
                     <Settings className="h-4 w-4 mr-2" />
-                    <span>Cài đặt</span>
+                    <span>Configuración</span>
                   </div>
                 </Link>
               </DropdownMenuItem>
@@ -204,7 +204,7 @@ export function CustomHeader() {
                 <Link href="/deposit">
                   <div className="flex items-center w-full">
                     <CreditCard className="h-4 w-4 mr-2" />
-                    <span>Nạp tiền</span>
+                    <span>Depositar</span>
                   </div>
                 </Link>
               </DropdownMenuItem>
@@ -212,7 +212,7 @@ export function CustomHeader() {
                 <Link href="/guide">
                   <div className="flex items-center w-full">
                     <Info className="h-4 w-4 mr-2" />
-                    <span>Hỗ trợ</span>
+                    <span>Soporte</span>
                   </div>
                 </Link>
               </DropdownMenuItem>
@@ -222,7 +222,7 @@ export function CustomHeader() {
                 onClick={handleLogout}
               >
                 <LogOut className="h-4 w-4 mr-2" />
-                <span>Đăng xuất</span>
+                <span>Cerrar sesión</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

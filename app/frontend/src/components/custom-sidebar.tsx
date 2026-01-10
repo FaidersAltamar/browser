@@ -33,26 +33,26 @@ export function CustomSidebar() {
 
   const sidebarLinks = [
     { 
-      group: "MANAGEMENT", 
+      group: "GESTIÓN", 
       items: [
-        { href: "/profile", icon: User, label: "Hồ sơ", count: 0 },
-        { href: "/network", icon: Network, label: "Mạng", count: 0 },
-        { href: "/automation", icon: BarChart2, label: "Tự động hóa", count: 0 },
-        { href: "/settings", icon: Settings, label: "Cài đặt", count: 0 },
+        { href: "/profile", icon: User, label: "Perfiles", count: 0 },
+        { href: "/network", icon: Network, label: "Red", count: 0 },
+        { href: "/automation", icon: BarChart2, label: "Automatización", count: 0 },
+        { href: "/settings", icon: Settings, label: "Configuración", count: 0 },
       ]
     },
     { 
       group: "MARKETPLACE", 
       items: [
-        { href: "/store", icon: Store, label: "Cửa hàng", count: 0 },
-        { href: "/upgrade", icon: CreditCard, label: "Nâng cấp", count: 0, badge: "PRO" },
-        { href: "/deposit", icon: CreditCard, label: "Nạp tiền", count: 0 },
+        { href: "/store", icon: Store, label: "Tienda", count: 0 },
+        { href: "/upgrade", icon: CreditCard, label: "Actualizar", count: 0, badge: "PRO" },
+        { href: "/deposit", icon: CreditCard, label: "Depositar", count: 0 },
       ]
     },
     { 
-      group: "SUPPORT", 
+      group: "SOPORTE", 
       items: [
-        { href: "/guide", icon: BookOpen, label: "Hướng dẫn", count: 0 },
+        { href: "/guide", icon: BookOpen, label: "Guía", count: 0 },
       ]
     }
   ];
@@ -148,33 +148,33 @@ export function CustomSidebar() {
 
               {/* Profile limit banner */}
               <div className="bg-blue-100 dark:bg-blue-900/40 py-2 px-4 text-center">
-                <span className="text-blue-700 dark:text-blue-300 font-medium text-sm">Dùng 1000 profiles</span>
+                <span className="text-blue-700 dark:text-blue-300 font-medium text-sm">Usar 1000 perfiles</span>
               </div>
 
               {/* Stats list */}
               <div className="p-3 space-y-1.5">
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-gray-700 dark:text-gray-300">Hồ sơ đám mây</span>
+                  <span className="text-gray-700 dark:text-gray-300">Perfiles en la nube</span>
                   <span className="text-gray-800 dark:text-gray-200 font-medium">2/5</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-gray-700 dark:text-gray-300">Hồ sơ cục bộ</span>
+                  <span className="text-gray-700 dark:text-gray-300">Perfiles locales</span>
                   <span className="text-gray-800 dark:text-gray-200 font-medium">0/0</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-gray-700 dark:text-gray-300">Thành viên nhóm</span>
+                  <span className="text-gray-700 dark:text-gray-300">Miembros del equipo</span>
                   <span className="text-gray-800 dark:text-gray-200 font-medium">0/0</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-gray-700 dark:text-gray-300">Phiên đăng nhập</span>
+                  <span className="text-gray-700 dark:text-gray-300">Sesión activa</span>
                   <span className="text-gray-800 dark:text-gray-200 font-medium">1/1</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-gray-700 dark:text-gray-300">Giới hạn tạo/ngày</span>
+                  <span className="text-gray-700 dark:text-gray-300">Límite creación/día</span>
                   <span className="text-gray-800 dark:text-gray-200 font-medium">2/10</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-gray-700 dark:text-gray-300">Hết hạn vào</span>
+                  <span className="text-gray-700 dark:text-gray-300">Expira el</span>
                   <span className="text-gray-800 dark:text-gray-200 font-medium">2026-05-02</span>
                 </div>
               </div>
@@ -189,7 +189,7 @@ export function CustomSidebar() {
                   }}
                 >
                   <CreditCard className="h-4 w-4" />
-                  Nâng cấp
+                  Actualizar
                 </Button>
               </div>
             </div>

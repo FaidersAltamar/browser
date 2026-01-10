@@ -27,7 +27,9 @@ export class ElectronAPIClient {
   }
 
   static async request(method: string, url: string, data?: any): Promise<Response> {
-
+    console.log(`🔵 ElectronAPIClient.request called: method=${method}, url=${url}`);
+    console.log(`🔵 isElectron():`, this.isElectron());
+    console.log(`🔵 window.electronAPI:`, typeof window !== 'undefined' ? (window as any).electronAPI : 'window undefined');
 
     // Tự động thêm Authorization header nếu có token
     const headers: Record<string, string> = {
@@ -40,6 +42,7 @@ export class ElectronAPIClient {
     }
 
     if (!this.isElectron()) {
+      console.log(`⚠️ Not in Electron mode, using fetch fallback`);
       // Fallback cho web mode
       const response = await fetch(url, {
         method,
@@ -50,23 +53,32 @@ export class ElectronAPIClient {
     }
 
     // Electron mode - sử dụng IPC với headers
-    const result = await window.electronAPI.backendRequest(method, url, data, headers);
+    console.log(`📡 ElectronAPIClient.request: Calling IPC with method=${method}, url=${url}`);
+    console.log(`📦 IPC data:`, data);
+    console.log(`📋 IPC headers:`, headers);
     
-    // Xử lý response từ backend một cách chính xác
-    let status = 200;
-    let statusText = 'OK';
-    let responseData = result;
+    try {
+      const result = await window.electronAPI.backendRequest(method, url, data, headers);
+      console.log(`✅ IPC response received:`, result);
+      
+      // Xử lý response từ backend một cách chính xác
+      let status = 200;
+      let statusText = 'OK';
+      let responseData = result;
     
     // Nếu backend trả về object có status code (từ main.mjs)
     if (result && typeof result === 'object') {
       if (result.status) {
         status = result.status;
-        statusText = result.statusText || (status >= 400 ? 'Error' : 'OK');
+        // Usar solo caracteres ASCII para statusText (evitar caracteres vietnamitas)
+        const rawStatusText = result.statusText || (status >= 400 ? 'Error' : 'OK');
+        statusText = rawStatusText.replace(/[^\x00-\x7F]/g, '').substring(0, 50) || (status >= 400 ? 'Error' : 'OK');
         // Nếu có data, sử dụng data, ngược lại sử dụng toàn bộ result
         responseData = result.ok === false ? result : (result.data || result);
       } else if (result.error) {
         status = result.error.status || 500;
-        statusText = result.error.message || 'Internal Server Error';
+        const rawErrorText = result.error.message || 'Internal Server Error';
+        statusText = rawErrorText.replace(/[^\x00-\x7F]/g, '').substring(0, 50) || 'Internal Server Error';
         responseData = result;
       } else if (result.success === false) {
         status = 400;
@@ -74,14 +86,20 @@ export class ElectronAPIClient {
       }
     }
     
-    // Tạo Response object với status chính xác
-    return new Response(JSON.stringify(responseData), {
-      status,
-      statusText,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+      // Tạo Response object với status chính xác
+      const response = new Response(JSON.stringify(responseData), {
+        status,
+        statusText,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log(`✅ ElectronAPIClient.request: Returning response with status=${status}`);
+      return response;
+    } catch (error) {
+      console.error(`❌ ElectronAPIClient.request: IPC call failed:`, error);
+      throw error;
+    }
   }
 
   // Profile management methods

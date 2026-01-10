@@ -1,3 +1,4 @@
+import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../utils/jwt';
 
 export interface AuthenticatedUser {
@@ -5,6 +6,15 @@ export interface AuthenticatedUser {
   username: string;
   email: string;
   role: string;
+}
+
+// Extender el tipo Request para incluir user
+declare global {
+  namespace Express {
+    interface Request {
+      user?: AuthenticatedUser;
+    }
+  }
 }
 
 /**
@@ -78,3 +88,25 @@ export class AuthMiddleware {
     return false;
   }
 }
+
+/**
+ * Express middleware para autenticación JWT
+ * Extrae el token del header Authorization y valida el usuario
+ */
+export const authenticateJWT = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const user = await AuthMiddleware.authenticate(req.headers);
+    req.user = user;
+    next();
+  } catch (error: any) {
+    res.status(401).json({
+      success: false,
+      message: error.message || 'Unauthorized',
+      error: 'UNAUTHORIZED'
+    });
+  }
+};

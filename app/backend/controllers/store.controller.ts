@@ -1,3 +1,4 @@
+import { Request, Response } from 'express';
 import { StoreService } from '../services/store.service';
 import { StoreProductModel, StoreProductConverter } from '../models/StoreProduct';
 import { StoreCategoryModel, StoreCategoryConverter } from '../models/StoreCategory';
@@ -434,4 +435,168 @@ export class StoreController {
     throw new Error('Failed to fetch tags');
   }
 }
+
+  // Express middleware handlers
+  static async getProducts(req: Request, res: Response): Promise<void> {
+    try {
+      const result = await this.handleGetProducts(req.query, req.user || null);
+      res.json(result);
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        message: error.message || 'Failed to get products',
+        error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+      });
+    }
+  }
+
+  static async searchProducts(req: Request, res: Response): Promise<void> {
+    try {
+      const result = await this.handleSearchProducts(req.query, req.user || null);
+      res.json(result);
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        message: error.message || 'Failed to search products',
+        error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+      });
+    }
+  }
+
+  static async getProductsByCategory(req: Request, res: Response): Promise<void> {
+    try {
+      const categoryId = parseInt(req.params.categoryId);
+      const result = await this.handleGetProductsByCategory(categoryId, req.user || null);
+      res.json(result);
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        message: error.message || 'Failed to get products by category',
+        error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+      });
+    }
+  }
+
+  static async getFeaturedProducts(req: Request, res: Response): Promise<void> {
+    try {
+      const result = await this.handleGetFeaturedProducts(req.user || null);
+      res.json(result);
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        message: error.message || 'Failed to get featured products',
+        error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+      });
+    }
+  }
+
+  static async getProductDetails(req: Request, res: Response): Promise<void> {
+    try {
+      const productId = parseInt(req.params.productId);
+      const result = await this.handleGetProductDetails(productId, req.user || null);
+      res.json(result);
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        message: error.message || 'Failed to get product details',
+        error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+      });
+    }
+  }
+
+  static async getProductReviews(req: Request, res: Response): Promise<void> {
+    try {
+      const productId = parseInt(req.params.productId);
+      const result = await this.handleGetProductReviews(productId, req.query);
+      res.json(result);
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        message: error.message || 'Failed to get product reviews',
+        error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+      });
+    }
+  }
+
+  static async getCategories(req: Request, res: Response): Promise<void> {
+    try {
+      const result = await this.handleGetCategories();
+      res.json(result);
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        message: error.message || 'Failed to get categories',
+        error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+      });
+    }
+  }
+
+  static async getInstalledProducts(req: Request, res: Response): Promise<void> {
+    try {
+      const result = await this.handleGetInstalledProducts(req.user || null);
+      res.json(result);
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        message: error.message || 'Failed to get installed products',
+        error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+      });
+    }
+  }
+
+  static async purchaseProduct(req: Request, res: Response): Promise<void> {
+    try {
+      const productId = parseInt(req.params.productId);
+      const result = await this.handlePurchaseProduct(productId, req.user || null);
+      res.json(result);
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        message: error.message || 'Failed to purchase product',
+        error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+      });
+    }
+  }
+
+  static async installProduct(req: Request, res: Response): Promise<void> {
+    try {
+      const productId = parseInt(req.params.productId);
+      const result = await this.handleInstallProduct(productId, req.user || null);
+      res.json(result);
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        message: error.message || 'Failed to install product',
+        error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+      });
+    }
+  }
+
+  static async uninstallProduct(req: Request, res: Response): Promise<void> {
+    try {
+      const productId = parseInt(req.params.productId);
+      const result = await this.handleUninstallProduct(productId, req.user || null);
+      res.json(result);
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        message: error.message || 'Failed to uninstall product',
+        error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+      });
+    }
+  }
+
+  static async rateProduct(req: Request, res: Response): Promise<void> {
+    try {
+      const productId = parseInt(req.params.productId);
+      const result = await this.handleRateProduct(productId, req.body, req.user || null);
+      res.json(result);
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        message: error.message || 'Failed to rate product',
+        error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+      });
+    }
+  }
 }

@@ -9,58 +9,143 @@ let pLimit: any;
 import { WorkflowExecutionModel } from "../models/WorkflowExecution";
 import { randomInt } from "crypto";
 import { executeWorkflow } from "../workflow/executor";
+
+// Sistema de gestión de sesiones activas para mantener navegadores abiertos
+interface ActiveSession {
+  context: playwright.BrowserContext;
+  page: playwright.Page;
+  browser: playwright.Browser | null;
+  profileId: string;
+  userId: string;
+  startTime: Date;
+}
+
+// Map para almacenar sesiones activas: profileId -> ActiveSession
+const activeSessions = new Map<string, ActiveSession>();
+
 export class LaunchService {
+  /**
+   * Obtiene una sesión activa por profileId
+   */
+  static getActiveSession(profileId: string): ActiveSession | undefined {
+    return activeSessions.get(profileId);
+  }
+
+  /**
+   * Verifica si un perfil tiene una sesión activa
+   */
+  static hasActiveSession(profileId: string): boolean {
+    return activeSessions.has(profileId);
+  }
+
+  /**
+   * Cierra una sesión activa y el navegador asociado
+   */
+  static async closeSession(profileId: string): Promise<void> {
+    const session = activeSessions.get(profileId);
+    if (session) {
+      try {
+        console.log(`Cerrando sesión activa para el perfil ${profileId}...`);
+        await session.context.close();
+        activeSessions.delete(profileId);
+        await ProfileModel.update(parseInt(profileId), { status: "idle" });
+        console.log(`✅ Sesión cerrada para el perfil ${profileId}`);
+      } catch (error: any) {
+        console.error(`Error al cerrar sesión para el perfil ${profileId}:`, error);
+        activeSessions.delete(profileId);
+      }
+    }
+  }
+
+  /**
+   * Cierra todas las sesiones activas
+   */
+  static async closeAllSessions(): Promise<void> {
+    const closePromises = Array.from(activeSessions.keys()).map(profileId =>
+      this.closeSession(profileId).catch(err =>
+        console.error(`Error al cerrar sesión ${profileId}:`, err)
+      )
+    );
+    await Promise.all(closePromises);
+  }
   static async launchProfile(
     userId: string,
     profileId: string,
     options: any = {},
   ) {
-    let context: playwright.BrowserContext | null = null;
     try {
+      // Verificar si ya existe una sesión activa para este perfil
+      if (activeSessions.has(profileId)) {
+        console.log(`⚠️ Ya existe una sesión activa para el perfil ${profileId}`);
+        return { 
+          success: true, 
+          profileId: profileId,
+          message: "El perfil ya está en ejecución"
+        };
+      }
+
       const profile = await ProfileModel.findById(parseInt(profileId, 10));
 
       if (!profile) {
         throw new Error(
-          "Profile không tồn tại hoặc không thuộc về người dùng.",
+          "El perfil no existe o no pertenece al usuario.",
         );
       }
 
-      console.log(`Đang khởi chạy browser cho profile ${profileId}...`);
+      console.log(`🚀 Iniciando navegador para el perfil ${profileId}...`);
+      
+      // Lanzar el navegador con Playwright
       const {
         context: browserContext,
         page,
         browser,
       } = await UtilService.launch(profile, options);
 
-      // context = browserContext;
-      console.log(`Browser đã được khởi chạy cho profile ${profileId}.`);
+      console.log(`✅ Navegador iniciado exitosamente para el perfil ${profileId}`);
 
-      // await ProfileModel.update(profile.id, { status: "active" });
+      // Crear sesión activa y almacenarla en el Map
+      const session: ActiveSession = {
+        context: browserContext,
+        page: page,
+        browser: browser,
+        profileId: profileId,
+        userId: userId,
+        startTime: new Date(),
+      };
 
-      // const fingerprintData = profile.fingerprint ? JSON.parse(profile.fingerprint) : {};
-      // const userAgent = fingerprintData.userAgent || (await page.evaluate("navigator.userAgent"));
+      activeSessions.set(profileId, session);
 
-      // const newSession = await ProfileSessionModel.create({
-      //   profileId: profile.id.toString(),
-      //   status: "running",
-      //   startTime: new Date(),
-      //   userAgent:"",
-      //   ip: "DYNAMIC_IP_FROM_PROXY_CHECK",
-      // });
+      // Actualizar estado del perfil a "active"
+      await ProfileModel.update(profile.id, { status: "active" });
 
-      // return newSession;
-      return { success: true, profileId: profile.id };
+      // Configurar listener para cuando el navegador se cierre automáticamente
+      browserContext.on('close', () => {
+        console.log(`⚠️ Navegador cerrado automáticamente para el perfil ${profileId}`);
+        activeSessions.delete(profileId);
+        ProfileModel.update(parseInt(profileId), { status: "idle" }).catch(err =>
+          console.error(`Error al actualizar estado del perfil ${profileId}:`, err)
+        );
+      });
+
+      console.log(`✅ Sesión activa creada y almacenada para el perfil ${profileId}`);
+      console.log(`📊 Sesiones activas totales: ${activeSessions.size}`);
+
+      return { 
+        success: true, 
+        profileId: profile.id,
+        sessionId: profileId,
+        message: "Navegador iniciado exitosamente"
+      };
     } catch (error: any) {
       console.error(
-        `Lỗi khi khởi chạy browser cho profile ${profileId}:`,
+        `❌ Error al iniciar navegador para el perfil ${profileId}:`,
         error.message,
       );
-      // if (context) {
-      //   await context
-      //     .close()
-      //     .catch((e) => console.error("Lỗi khi đóng browser context:", e));
-      // }
-      throw new Error(`Không thể khởi chạy browser: ${error.message}`);
+      
+      // Limpiar sesión si existe
+      activeSessions.delete(profileId);
+      
+      throw new Error(`Failed to launch browser: ${error.message}`);
     }
   }
 
@@ -70,8 +155,8 @@ export class LaunchService {
     concurrent: number,
     options: any = {},
   ) {
-    const queue = [...profileIds]; // Tạo hàng đợi từ danh sách profileIds
-    const sessions: any[] = []; // Lưu thông tin các session đã chạy
+    const queue = [...profileIds]; // Crear cola desde la lista de profileIds
+    const sessions: any[] = []; // Guardar información de las sesiones ejecutadas
 
     const launchProfile = async (profileId: string) => {
       try {
@@ -80,11 +165,11 @@ export class LaunchService {
 
         if (!profile) {
           throw new Error(
-            `Profile ${profileId} không tồn tại hoặc không thuộc về người dùng.`,
+            `El perfil ${profileId} no existe o no pertenece al usuario.`,
           );
         }
 
-        console.log(`Đang khởi chạy browser cho profile ${profileId}...`);
+        console.log(`Iniciando navegador para el perfil ${profileId}...`);
         const { context, page, browser } = await UtilService.launch(
           profile,
           options,
@@ -93,9 +178,9 @@ export class LaunchService {
         // const { context, page, browser } = await UtilService.launchTest(
         //   options,
         // );
-        console.log(`Browser đã được khởi chạy cho profile ${profileId}.`);
+        console.log(`El navegador se ha iniciado para el perfil ${profileId}.`);
 
-        // Cập nhật trạng thái profile
+        // Actualizar estado del perfil
         await ProfileModel.update(profile.id, { status: "active" });
 
         // Tạo session mới cho profile
@@ -112,26 +197,26 @@ export class LaunchService {
 
         // sessions.push(newSession);
 
-        // Giả lập automation hoàn thành hoặc profile bị tắt (có thể thay bằng logic thực tế)
-        await new Promise((resolve) => setTimeout(resolve, randomInt(5000, 10000))); // Chờ 10 giây
-        await context.close(); // Đóng browser sau khi hoàn thành
+        // Simular automatización completada o perfil cerrado (puede ser reemplazado por lógica real)
+        await new Promise((resolve) => setTimeout(resolve, randomInt(5000, 10000))); // Esperar 10 segundos
+        await context.close(); // Cerrar navegador después de completar
       } catch (error: any) {
-        console.error(`Lỗi khi khởi chạy profile ${profileId}:`, error);
+        console.error(`Error al iniciar el perfil ${profileId}:`, error);
       }
     };
 
-    // Tạo các worker để xử lý hàng đợi
+    // Crear workers para procesar la cola
     const workers = Array.from({ length: concurrent }, async () => {
       while (queue.length > 0) {
-        const profileId = queue.shift(); // Lấy profile tiếp theo từ hàng đợi
+        const profileId = queue.shift(); // Obtener el siguiente perfil de la cola
         if (profileId) {
-          // await limit(() => launchProfile(profileId)); // Chạy profile trong giới hạn luồng
+          // await limit(() => launchProfile(profileId)); // Ejecutar perfil dentro del límite de hilos
           await launchProfile(profileId);
         }
       }
     });
 
-    await Promise.all(workers); // Chờ tất cả worker hoàn thành
+    await Promise.all(workers); // Esperar a que todos los workers terminen
     return "sessions";
   }
 
@@ -148,7 +233,7 @@ export class LaunchService {
 
       if (groupMembers.length === 0) {
         throw new Error(
-          `Không có profile nào trong group ${groupId} thuộc về người dùng.`,
+          `No hay perfiles en el grupo ${groupId} que pertenezcan al usuario.`,
         );
       }
 
@@ -161,19 +246,19 @@ export class LaunchService {
         options,
       );
     } catch (error: any) {
-      console.error(`Lỗi khi lấy profile từ group ${groupId}:`, error);
-      throw new Error(`Không thể chạy profile group: ${error.message}`);
+      console.error(`Error al obtener perfiles del grupo ${groupId}:`, error);
+      throw new Error(`No se pudo ejecutar el grupo de perfiles: ${error.message}`);
     }
   }
 
   /**
-     * Chạy workflow với một profile đơn và quản lý execution
+     * Ejecutar workflow con un perfil individual y gestionar la ejecución
      */
   static async executeWorkflowWithProfile(userId: string, profileId: string, workflowId: string, options: any = {}) {
     try {
       const profile = await ProfileModel.findById(parseInt(profileId));
 
-      // Tạo bản ghi execution với trạng thái "running"
+      // Crear registro de ejecución con estado "running"
       // const execution = await WorkflowExecutionModel.create({
       //   workflowId: parseInt(workflowId),
       //   status: "running",
@@ -182,15 +267,15 @@ export class LaunchService {
       // });
 
       if (!profile) {
-        throw new Error(`Profile ${profileId} not found`);
+        throw new Error(`El perfil ${profileId} no se encontró`);
       }
 
       const { context, page, browser } = await UtilService.launch(options);
       try {
-        // TODO: Implement workflow execution logic
+        // TODO: Implementar lógica de ejecución de workflow
         // const result = { variables: {} };
 
-        // // Cập nhật execution thành "completed"
+        // // Actualizar ejecución a "completed"
         // if (execution) {
         //   await WorkflowExecutionModel.update(execution.id, {
         //     status: "completed",
@@ -203,13 +288,13 @@ export class LaunchService {
         //     progress: JSON.stringify({ completed: 100, total: 100, percentComplete: 100 }),
         //   });
         // }
-        console.error(`try run profile wiht workflow ${workflowId}:`);
+        console.error(`Intentando ejecutar perfil con workflow ${workflowId}:`);
         let execution = executeWorkflow(workflowId,context, page, userId);
-        console.error(`finish run profile wiht workflow ${workflowId}:`);
+        console.error(`Finalizada ejecución de perfil con workflow ${workflowId}:`);
 
         return execution;
       } catch (workflowError) {
-        // Cập nhật execution thành "failed"
+        // Actualizar ejecución a "failed"
         // if (execution) {
         //   await WorkflowExecutionModel.update(execution.id, {
         //     status: "failed",
@@ -219,7 +304,7 @@ export class LaunchService {
         // }
         throw workflowError;
       } finally {
-        await context.close(); // Đóng context sau khi hoàn thành
+        await context.close(); // Cerrar contexto después de completar
       }
     } catch (error) {
       console.error(`Error executing workflow for profile ${profileId}:`, error);
@@ -228,25 +313,26 @@ export class LaunchService {
   }
 
   /**
-   * Chạy workflow với danh sách profile kèm số luồng đồng thời
+   * Ejecutar workflow con una lista de perfiles junto con el número de hilos concurrentes
    */
   static async executeWorkflowWithProfiles(userId: string, profileIds: string[], workflowId: string, concurrent: number, options: any = {}) {
     if (!pLimit) {
-      pLimit = (await import('p-limit')).default;
+      const pLimitModule = await import('p-limit');
+      pLimit = pLimitModule.default || pLimitModule;
     }
-    const limit = pLimit(concurrent); // Giới hạn số luồng đồng thời
+    const limit = pLimit(concurrent); // Limitar el número de hilos concurrentes
     const executionPromises = profileIds.map(profileId =>
       limit(() => this.executeWorkflowWithProfile(userId, profileId, workflowId, options).catch(error => {
-        console.error(`Error executing workflow for profile ${profileId}:`, error);
-        return null; // Trả về null nếu có lỗi để không làm gián đoạn các luồng khác
+        console.error(`Error ejecutando workflow para el perfil ${profileId}:`, error);
+        return null; // Devolver null si hay error para no interrumpir otros hilos
       }))
     );
     const results = await Promise.all(executionPromises);
-    return results.filter(result => result !== null); // Lọc bỏ các kết quả lỗi
+    return results.filter(result => result !== null); // Filtrar resultados con error
   }
 
   /**
-   * Chạy workflow với một group profile kèm số luồng đồng thời
+   * Ejecutar workflow con un grupo de perfiles junto con el número de hilos concurrentes
    */
   static async executeWorkflowWithProfileGroup(userId: string, groupId: string, workflowId: string, concurrent: number, options: any = {}) {
     const group = await ProfileGroupModel.findById(parseInt(groupId));

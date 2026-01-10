@@ -1,35 +1,35 @@
 /**
- * Hàm hỗ trợ xử lý lỗi trong các service API
- * Cung cấp cách xử lý lỗi thống nhất trên toàn bộ ứng dụng
+ * Funciones auxiliares para manejo de errores en servicios API
+ * Proporciona una forma consistente de manejar errores en toda la aplicación
  */
 
 /**
- * Ghi log lỗi với định dạng nhất quán
- * @param serviceName Tên của service gặp lỗi
- * @param methodName Tên của phương thức gặp lỗi
- * @param error Đối tượng lỗi được bắt
+ * Registrar error con formato consistente
+ * @param serviceName Nombre del servicio que encontró el error
+ * @param methodName Nombre del método que encontró el error
+ * @param error Objeto de error capturado
  */
 export function logServiceError(serviceName: string, methodName: string, error: unknown): void {
   const errorMessage = error instanceof Error ? error.message : String(error);
-  console.error(`[${serviceName}] Lỗi trong ${methodName}: ${errorMessage}`);
+  console.error(`[${serviceName}] Error en ${methodName}: ${errorMessage}`);
   
-  // Ghi thêm stack trace trong môi trường phát triển
+  // Registrar stack trace adicional en entorno de desarrollo
   if (process.env.NODE_ENV !== 'production' && error instanceof Error && error.stack) {
     console.debug(`Stack trace: ${error.stack}`);
   }
 }
 /**
- * Wrapper nâng cao để xử lý các phản hồi API được mong đợi là một mảng.
- * 1. Kiểm tra xem yêu cầu API có thành công về mặt HTTP không (status 2xx).
- * 2. Nếu thất bại, ném ra một lỗi rõ ràng với thông điệp từ server.
- * 3. Nếu thành công, tìm và trả về dữ liệu mảng, kể cả khi nó được lồng trong một object.
- * 4. Nếu phản hồi thành công nhưng không tìm thấy mảng, sẽ log cảnh báo và trả về mảng rỗng.
+ * Wrapper avanzado para manejar respuestas API que se espera que sean un array.
+ * 1. Verifica si la solicitud API tuvo éxito a nivel HTTP (status 2xx).
+ * 2. Si falla, lanza un error claro con el mensaje del servidor.
+ * 3. Si tiene éxito, busca y devuelve los datos del array, incluso si está anidado en un objeto.
+ * 4. Si la respuesta es exitosa pero no se encuentra el array, registrará una advertencia y devolverá un array vacío.
  *
- * @param promise Promise của API call, nên là một Promise<Response> từ fetch.
- * @param serviceName Tên của service để ghi log.
- * @param methodName Tên của phương thức để ghi log.
- * @returns Promise chứa mảng kết quả.
- * @throws {Error} Ném lỗi nếu phản hồi từ API là lỗi (vd: status 401, 500).
+ * @param promise Promise de la llamada API, debería ser un Promise<Response> de fetch.
+ * @param serviceName Nombre del servicio para registrar.
+ * @param methodName Nombre del método para registrar.
+ * @returns Promise que contiene el array de resultados.
+ * @throws {Error} Lanza error si la respuesta de la API es un error (ej: status 401, 500).
  */
 export async function handleArrayResponse<T>(
   promise: Promise<Response>, // Nên dùng kiểu Response rõ ràng hơn là any
@@ -38,32 +38,32 @@ export async function handleArrayResponse<T>(
 ): Promise<T[]> {
   const response = await promise;
 
-  // BƯỚC 1: KIỂM TRA PHẢN HỒI HTTP
-  // Đây là bước quan trọng nhất bị thiếu trong code gốc của bạn.
+  // PASO 1: VERIFICAR RESPUESTA HTTP
+  // Este es el paso más importante que faltaba en el código original.
   if (!response.ok) {
     let errorData;
     try {
-      // Cố gắng phân tích nội dung lỗi dưới dạng JSON (trường hợp phổ biến)
+      // Intentar analizar el contenido del error como JSON (caso común)
       errorData = await response.json();
     } catch (e) {
-      // Nếu không phải JSON, lấy dưới dạng văn bản
+      // Si no es JSON, obtener como texto
       errorData = await response.text();
     }
 
-    // Tạo và NÉM RA một lỗi rõ ràng. Việc này sẽ được bắt bởi khối `catch`
-    // trong các hàm gọi nó (như getWorkflows).
+    // Crear y LANZAR un error claro. Esto será capturado por el bloque `catch`
+    // en las funciones que lo llaman (como getWorkflows).
     const errorMessage =
       errorData?.message || JSON.stringify(errorData) || response.statusText;
     throw new Error(
-      `[${serviceName}] ${methodName}: Yêu cầu API thất bại với status ${response.status}. Lỗi: ${errorMessage}`
+      `[${serviceName}] ${methodName}: Solicitud API falló con status ${response.status}. Error: ${errorMessage}`
     );
   }
 
-  // BƯỚC 2: XỬ LÝ KHI PHẢN HỒI THÀNH CÔNG
+  // PASO 2: MANEJAR CUANDO LA RESPUESTA ES EXITOSA
   try {
     const data = await response.json();
 
-    // Logic cũ của bạn để tìm mảng - rất tốt và nên giữ lại
+    // Lógica para encontrar el array - muy buena y debería mantenerse
     if (Array.isArray(data)) {
       return data;
     }
@@ -77,27 +77,27 @@ export async function handleArrayResponse<T>(
       }
     }
 
-    // Nếu phản hồi thành công nhưng định dạng không như mong đợi
+    // Si la respuesta es exitosa pero el formato no es el esperado
     console.warn(
-      `[${serviceName}] ${methodName}: Phản hồi thành công nhưng dữ liệu không chứa định dạng mảng mong muốn:`,
+      `[${serviceName}] ${methodName}: Respuesta exitosa pero los datos no contienen el formato de array esperado:`,
       data
     );
-    return []; // Trả về mảng rỗng theo đúng ý định ban đầu
+    return []; // Devolver array vacío según la intención original
   } catch (error) {
-    // Bắt lỗi nếu response.json() thất bại (vd: body rỗng hoặc không phải JSON)
+    // Capturar error si response.json() falla (ej: body vacío o no es JSON)
     throw new Error(
-      `[${serviceName}] ${methodName}: Không thể phân tích phản hồi JSON từ một yêu cầu thành công.`
+      `[${serviceName}] ${methodName}: No se pudo analizar la respuesta JSON de una solicitud exitosa.`
     );
   }
 }
 
 /**
- * Wrapper để xử lý lỗi khi gọi API trả về single object
- * @param promise Promise của API call trả về object
- * @param serviceName Tên của service
- * @param methodName Tên của phương thức
- * @param defaultValue Giá trị mặc định nếu có lỗi (tùy chọn)
- * @returns Object kết quả hoặc defaultValue nếu có lỗi
+ * Wrapper para manejar errores al llamar API que devuelve un objeto único
+ * @param promise Promise de la llamada API que devuelve un objeto
+ * @param serviceName Nombre del servicio
+ * @param methodName Nombre del método
+ * @param defaultValue Valor por defecto si hay error (opcional)
+ * @returns Objeto resultado o defaultValue si hay error
  */
 export async function handleObjectResponse<T>(
   promise: Promise<any>,
@@ -107,7 +107,7 @@ export async function handleObjectResponse<T>(
 ): Promise<T> {
   const response = await promise;
 
-  // BƯỚC 1: KIỂM TRA PHẢN HỒI HTTP (tương tự handleArrayResponse)
+  // PASO 1: VERIFICAR RESPUESTA HTTP (similar a handleArrayResponse)
   if (!response.ok) {
     let errorData;
     try {
@@ -119,34 +119,34 @@ export async function handleObjectResponse<T>(
     const errorMessage =
       errorData?.message || JSON.stringify(errorData) || response.statusText;
     
-    // Xử lý đặc biệt cho lỗi authentication
+    // Manejo especial para errores de autenticación
     if (response.status === 401) {
       throw new Error(
-        `[${serviceName}] ${methodName}: Phiên đăng nhập đã hết hạn hoặc không hợp lệ. ${errorMessage}`
+        `[${serviceName}] ${methodName}: La sesión ha expirado o no es válida. ${errorMessage}`
       );
     }
     
     if (response.status === 403) {
       throw new Error(
-        `[${serviceName}] ${methodName}: Bạn không có quyền truy cập. ${errorMessage}`
+        `[${serviceName}] ${methodName}: No tienes permiso para acceder. ${errorMessage}`
       );
     }
 
     throw new Error(
-      `[${serviceName}] ${methodName}: Yêu cầu API thất bại với status ${response.status}. Lỗi: ${errorMessage}`
+      `[${serviceName}] ${methodName}: Solicitud API falló con status ${response.status}. Error: ${errorMessage}`
     );
   }
 
-  // BƯỚC 2: XỬ LÝ KHI PHẢN HỒI THÀNH CÔNG
+  // PASO 2: MANEJAR CUANDO LA RESPUESTA ES EXITOSA
   try {
     const data = await response.json();
     
-    // Nhiều API có thể trả về dữ liệu trong cấu trúc khác nhau
-    // Ví dụ: { data: {...} } hoặc { profile: {...} } hoặc trực tiếp là object
+    // Muchas APIs pueden devolver datos en estructuras diferentes
+    // Ejemplo: { data: {...} } o { profile: {...} } o directamente el objeto
     
     if (data && typeof data === 'object') {
       if (!Array.isArray(data)) {
-        // Trường hợp có các thuộc tính bao bọc
+        // Caso donde hay propiedades envolventes
         const possibleObjProps = ['data', 'profile', 'result', 'content', 'item'];
         for (const prop of possibleObjProps) {
           if (data[prop] && typeof data[prop] === 'object' && !Array.isArray(data[prop])) {
@@ -154,31 +154,31 @@ export async function handleObjectResponse<T>(
           }
         }
         
-        // Nếu có id là dữ liệu hợp lệ (đối với các entity)
+        // Si tiene id es un dato válido (para entidades)
         if ('id' in data) {
           return data as T;
         }
         return data as T; 
       }
       
-      console.warn(`[${serviceName}] ${methodName}: Dữ liệu không đúng định dạng object:`, data);
+      console.warn(`[${serviceName}] ${methodName}: Los datos no tienen el formato de objeto correcto:`, data);
     }
     
     return defaultValue;
   } catch (error) {
     throw new Error(
-      `[${serviceName}] ${methodName}: Không thể phân tích phản hồi JSON từ một yêu cầu thành công.`
+      `[${serviceName}] ${methodName}: No se pudo analizar la respuesta JSON de una solicitud exitosa.`
     );
   }
 }
 
 /**
- * Xử lý lỗi cho các mutation methods (thêm, sửa, xóa)
- * @param promise Promise của API call
- * @param serviceName Tên của service
- * @param methodName Tên của phương thức
- * @param throwError Có nên throw lỗi hay không, mặc định là true
- * @returns Kết quả của API call hoặc null nếu có lỗi
+ * Manejar errores para métodos de mutación (agregar, editar, eliminar)
+ * @param promise Promise de la llamada API
+ * @param serviceName Nombre del servicio
+ * @param methodName Nombre del método
+ * @param throwError Si debe lanzar error o no, por defecto es true
+ * @returns Resultado de la llamada API o null si hay error
  */
 export async function handleMutationResponse<T>(
   promise: Promise<any>,
@@ -188,7 +188,7 @@ export async function handleMutationResponse<T>(
 ): Promise<T> {
   const response = await promise;
 
-  // BƯỚC 1: KIỂM TRA PHẢN HỒI HTTP (tương tự handleArrayResponse)
+  // PASO 1: VERIFICAR RESPUESTA HTTP (similar a handleArrayResponse)
   if (!response.ok) {
     let errorData;
     try {
@@ -200,10 +200,10 @@ export async function handleMutationResponse<T>(
     const errorMessage =
       errorData?.message || JSON.stringify(errorData) || response.statusText;
     
-    // Xử lý đặc biệt cho lỗi authentication
+    // Manejo especial para errores de autenticación
     if (response.status === 401) {
       const authError = new Error(
-        `[${serviceName}] ${methodName}: Phiên đăng nhập đã hết hạn hoặc không hợp lệ. ${errorMessage}`
+        `[${serviceName}] ${methodName}: La sesión ha expirado o no es válida. ${errorMessage}`
       );
       if (throwError) throw authError;
       logServiceError(serviceName, methodName, authError);
@@ -212,7 +212,7 @@ export async function handleMutationResponse<T>(
     
     if (response.status === 403) {
       const permError = new Error(
-        `[${serviceName}] ${methodName}: Bạn không có quyền thực hiện hành động này. ${errorMessage}`
+        `[${serviceName}] ${methodName}: No tienes permiso para realizar esta acción. ${errorMessage}`
       );
       if (throwError) throw permError;
       logServiceError(serviceName, methodName, permError);
@@ -220,20 +220,20 @@ export async function handleMutationResponse<T>(
     }
 
     const apiError = new Error(
-      `[${serviceName}] ${methodName}: Yêu cầu API thất bại với status ${response.status}. Lỗi: ${errorMessage}`
+      `[${serviceName}] ${methodName}: Solicitud API falló con status ${response.status}. Error: ${errorMessage}`
     );
     if (throwError) throw apiError;
     logServiceError(serviceName, methodName, apiError);
     return {} as T;
   }
 
-  // BƯỚC 2: XỬ LÝ KHI PHẢN HỒI THÀNH CÔNG
+  // PASO 2: MANEJAR CUANDO LA RESPUESTA ES EXITOSA
   try {
     const data = await response.json();
     
-    // Mutation thường trả về object trực tiếp hoặc wrapped trong data
+    // Las mutaciones generalmente devuelven objeto directamente o envuelto en data
     if (data && typeof data === 'object') {
-      // Kiểm tra các wrapper properties phổ biến
+      // Verificar propiedades envolventes comunes
       const possibleProps = ['data', 'result', 'response', 'item'];
       for (const prop of possibleProps) {
         if (data[prop] !== undefined) {
@@ -241,14 +241,14 @@ export async function handleMutationResponse<T>(
         }
       }
       
-      // Trả về trực tiếp nếu không có wrapper
+      // Devolver directamente si no hay wrapper
       return data as T;
     }
     
     return data as T;
   } catch (error) {
     const parseError = new Error(
-      `[${serviceName}] ${methodName}: Không thể phân tích phản hồi JSON từ một yêu cầu thành công.`
+      `[${serviceName}] ${methodName}: No se pudo analizar la respuesta JSON de una solicitud exitosa.`
     );
     if (throwError) throw parseError;
     logServiceError(serviceName, methodName, parseError);
@@ -257,53 +257,53 @@ export async function handleMutationResponse<T>(
 }
 
 /**
- * Format lỗi để hiển thị thân thiện với người dùng
- * @param error Đối tượng lỗi
- * @returns Chuỗi thông báo lỗi thân thiện
+ * Formatear error para mostrarlo de forma amigable al usuario
+ * @param error Objeto de error
+ * @returns Cadena de mensaje de error amigable
  */
 export function formatErrorMessage(error: unknown): string {
   if (error instanceof Error) {
     const message = error.message;
     
-    // Xử lý các lỗi từ auth.middleware.ts
+    // Manejar errores desde auth.middleware.ts
     if (message.includes('Authorization header is required')) {
-      return 'Vui lòng đăng nhập để tiếp tục sử dụng.';
+      return 'Por favor, inicia sesión para continuar.';
     }
     
     if (message.includes('Invalid authorization format')) {
-      return 'Định dạng xác thực không hợp lệ. Vui lòng đăng nhập lại.';
+      return 'Formato de autenticación no válido. Por favor, inicia sesión nuevamente.';
     }
     
     if (message.includes('Invalid token payload') || message.includes('Invalid or expired token')) {
-      return 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.';
+      return 'La sesión ha expirado. Por favor, inicia sesión nuevamente.';
     }
     
-    // Xử lý các loại lỗi HTTP cụ thể
+    // Manejar tipos específicos de errores HTTP
     if (message.includes('Network Error') || message.includes('Failed to fetch')) {
-      return 'Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng của bạn.';
+      return 'No se pudo conectar al servidor. Por favor, verifica tu conexión de red.';
     }
     
-    if (message.includes('401') || message.includes('Unauthorized') || message.includes('Phiên đăng nhập đã hết hạn')) {
-      return 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.';
+    if (message.includes('401') || message.includes('Unauthorized') || message.includes('La sesión ha expirado')) {
+      return 'La sesión ha expirado. Por favor, inicia sesión nuevamente.';
     }
     
-    if (message.includes('403') || message.includes('Forbidden') || message.includes('không có quyền')) {
-      return 'Bạn không có quyền thực hiện hành động này.';
+    if (message.includes('403') || message.includes('Forbidden') || message.includes('no tienes permiso')) {
+      return 'No tienes permiso para realizar esta acción.';
     }
     
     if (message.includes('404') || message.includes('Not Found')) {
-      return 'Không tìm thấy tài nguyên yêu cầu.';
+      return 'No se encontró el recurso solicitado.';
     }
     
     if (message.includes('500') || message.includes('Internal Server Error')) {
-      return 'Đã xảy ra lỗi từ máy chủ. Vui lòng thử lại sau.';
+      return 'Ocurrió un error en el servidor. Por favor, intenta nuevamente más tarde.';
     }
     
     if (message.includes('400') || message.includes('Bad Request')) {
-      return 'Dữ liệu gửi đi không hợp lệ. Vui lòng kiểm tra lại thông tin.';
+      return 'Los datos enviados no son válidos. Por favor, verifica la información.';
     }
     
-    // Trả về message gốc nếu đã được format từ các hàm handle khác
+    // Devolver mensaje original si ya fue formateado por otras funciones handle
     if (message.includes('[') && message.includes(']')) {
       return message;
     }
@@ -311,5 +311,5 @@ export function formatErrorMessage(error: unknown): string {
     return error.message;
   }
   
-  return 'Đã xảy ra lỗi không xác định.';
+  return 'Ocurrió un error desconocido.';
 }

@@ -1,4 +1,4 @@
-// Đường dẫn: src/components/workflow-editor/workflow-run-dialog.tsx
+// Ruta: src/components/workflow-editor/workflow-run-dialog.tsx
 
 import React, { useState, useMemo } from "react";
 import {
@@ -23,7 +23,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Play, User, Users, AlertTriangle, Search } from "lucide-react";
 
-// 1. ĐỊNH NGHĨA CÁC KIỂU DỮ LIỆU CẦN THIẾT
+// 1. Definir tipos de datos necesarios
 export interface Profile {
   id: string;
   name: string;
@@ -49,7 +49,7 @@ interface WorkflowRunDialogProps {
 }
 
 
-// 2. COMPONENT CHÍNH
+// 2. Componente principal
 export function WorkflowRunDialog({
   open,
   onOpenChange,
@@ -58,22 +58,22 @@ export function WorkflowRunDialog({
   profiles,
   groups,
 }: WorkflowRunDialogProps) {
-  // === State quản lý toàn bộ dialog ===
+  // === Estado para gestionar todo el diálogo ===
   const [runMode, setRunMode] = useState<'profile' | 'group'>('profile');
   const [selectedProfileId, setSelectedProfileId] = useState<string>("");
   const [selectedGroupId, setSelectedGroupId] = useState<string>("");
   const [threads, setThreads] = useState<number>(5);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Memoize để tối ưu việc lọc profile khi tìm kiếm
+  // Memoizar para optimizar el filtrado de perfiles al buscar
   const filteredProfiles = useMemo(() => {
     if (!searchQuery) return profiles;
     return profiles.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
   }, [profiles, searchQuery]);
 
-  // === Các hàm xử lý ===
+  // === Funciones de manejo ===
 
-  // Xử lý khi nhấn nút "Run Workflow"
+  // Manejar cuando se presiona el botón "Run Workflow"
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -82,10 +82,10 @@ export function WorkflowRunDialog({
     } else if (runMode === 'group' && selectedGroupId) {
       onRun({ mode: 'group', groupId: selectedGroupId, threads });
     }
-    onOpenChange(false); // Đóng dialog sau khi submit
+    onOpenChange(false); // Cerrar diálogo después de enviar
   };
   
-  // Reset tất cả state khi dialog đóng
+  // Resetear todo el estado cuando se cierra el diálogo
   const resetState = () => {
     setRunMode('profile');
     setSelectedProfileId("");
@@ -94,58 +94,58 @@ export function WorkflowRunDialog({
     setSearchQuery("");
   };
 
-  // Điều kiện để bật/tắt nút Run
+  // Condición para habilitar/deshabilitar el botón Run
   const isRunDisabled =
     (runMode === 'profile' && !selectedProfileId) ||
     (runMode === 'group' && !selectedGroupId);
 
 
-  // === Giao diện JSX ===
+  // === Interfaz JSX ===
   return (
     <Dialog
       open={open}
       onOpenChange={(newOpenState) => {
         if (!newOpenState) {
-          resetState(); // Gọi hàm reset khi dialog đóng
+          resetState(); // Llamar función reset cuando se cierra el diálogo
         }
         onOpenChange(newOpenState);
       }}
     >
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Run Workflow: {workflow?.name}</DialogTitle>
+          <DialogTitle>Ejecutar Workflow: {workflow?.name}</DialogTitle>
           <DialogDescription>
-            Choose how you want to execute this workflow.
+            Elige cómo quieres ejecutar este workflow.
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 py-2">
-          {/* Lựa chọn chế độ: Profile hoặc Group */}
+          {/* Seleccionar modo: Perfil o Grupo */}
           <RadioGroup value={runMode} onValueChange={(value) => setRunMode(value as 'profile' | 'group')} className="grid grid-cols-2 gap-4">
             <div>
               <RadioGroupItem value="profile" id="r-profile" className="sr-only" />
               <Label htmlFor="r-profile" className={`flex flex-col items-center justify-center rounded-md border-2 p-4 cursor-pointer hover:bg-accent hover:text-accent-foreground ${runMode === 'profile' ? 'border-primary' : 'border-muted'}`}>
                 <User className="mb-3 h-6 w-6" />
-                Run on Profile
+                Ejecutar en Perfil
               </Label>
             </div>
             <div>
               <RadioGroupItem value="group" id="r-group" className="sr-only" />
               <Label htmlFor="r-group" className={`flex flex-col items-center justify-center rounded-md border-2 p-4 cursor-pointer hover:bg-accent hover:text-accent-foreground ${runMode === 'group' ? 'border-primary' : 'border-muted'}`}>
                 <Users className="mb-3 h-6 w-6" />
-                Run on Group
+                Ejecutar en Grupo
               </Label>
             </div>
           </RadioGroup>
 
-          {/* Hiển thị UI tương ứng với chế độ đã chọn */}
+          {/* Mostrar UI correspondiente al modo seleccionado */}
           {runMode === 'profile' ? (
             <div className="space-y-2">
-              <Label>Select a Profile</Label>
+              <Label>Seleccionar un Perfil</Label>
               <div className="relative">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search profile..."
+                  placeholder="Buscar perfil..."
                   className="pl-8"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -166,7 +166,7 @@ export function WorkflowRunDialog({
                         </Label>
                       ))
                     ) : (
-                      <p className="p-4 text-center text-sm text-muted-foreground">No profiles found.</p>
+                      <p className="p-4 text-center text-sm text-muted-foreground">No se encontraron perfiles.</p>
                     )}
                   </RadioGroup>
                 </div>
@@ -175,16 +175,16 @@ export function WorkflowRunDialog({
           ) : ( // runMode === 'group'
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label>Select Group</Label>
+                <Label>Seleccionar Grupo</Label>
                 {groups?.length > 0 ? (
                   <Select onValueChange={setSelectedGroupId} value={selectedGroupId}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a group to run on" />
+                      <SelectValue placeholder="Selecciona un grupo para ejecutar" />
                     </SelectTrigger>
                     <SelectContent>
                       {groups.map(group => (
                         <SelectItem key={group.id} value={group.id}>
-                          {group.name} ({group.profileCount || 0} profiles)
+                          {group.name} ({group.profileCount || 0} perfiles)
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -192,22 +192,22 @@ export function WorkflowRunDialog({
                 ) : (
                   <div className="text-sm text-yellow-600 flex items-center gap-2 p-3 border border-yellow-200 bg-yellow-50 rounded-md">
                     <AlertTriangle className="h-4 w-4" />
-                    <span>No groups available. Please create a group first.</span>
+                    <span>No hay grupos disponibles. Por favor, crea un grupo primero.</span>
                   </div>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="threads">Concurrent Threads</Label>
+                <Label htmlFor="threads">Hilos Concurrentes</Label>
                 <Input id="threads" type="number" min={1} max={50} value={threads} onChange={(e) => setThreads(Number(e.target.value))} />
               </div>
             </div>
           )}
 
           <DialogFooter className="mt-6">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
             <Button type="submit" disabled={isRunDisabled} className="gap-2">
               <Play className="h-4 w-4" />
-              Run Workflow
+              Ejecutar Workflow
             </Button>
           </DialogFooter>
         </form>

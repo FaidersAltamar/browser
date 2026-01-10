@@ -385,7 +385,7 @@ export default function ProfilePage() {
 
 
       <div className="flex flex-col gap-6">
-        {/* Hàng 1: ProfileList chiếm toàn bộ chiều ngang */}
+        {/* Fila 1: ProfileList ocupa todo el ancho */}
         <div>
           <ProfileList
             profiles={profiles}
@@ -415,7 +415,7 @@ export default function ProfilePage() {
           />
         </div>
 
-        {/* Hàng 2: Lưới 3 cột chứa 3 thẻ còn lại */}
+        {/* Fila 2: Grid de 3 columnas con 3 tarjetas restantes */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card>
             <CardHeader>

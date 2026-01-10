@@ -398,5 +398,169 @@ class StoreController {
             throw new Error('Failed to fetch tags');
         }
     }
+    // Express middleware handlers
+    static async getProducts(req, res) {
+        try {
+            const result = await this.handleGetProducts(req.query, req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to get products',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async searchProducts(req, res) {
+        try {
+            const result = await this.handleSearchProducts(req.query, req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to search products',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async getProductsByCategory(req, res) {
+        try {
+            const categoryId = parseInt(req.params.categoryId);
+            const result = await this.handleGetProductsByCategory(categoryId, req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to get products by category',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async getFeaturedProducts(req, res) {
+        try {
+            const result = await this.handleGetFeaturedProducts(req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to get featured products',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async getProductDetails(req, res) {
+        try {
+            const productId = parseInt(req.params.productId);
+            const result = await this.handleGetProductDetails(productId, req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to get product details',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async getProductReviews(req, res) {
+        try {
+            const productId = parseInt(req.params.productId);
+            const result = await this.handleGetProductReviews(productId, req.query);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to get product reviews',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async getCategories(req, res) {
+        try {
+            const result = await this.handleGetCategories();
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to get categories',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async getInstalledProducts(req, res) {
+        try {
+            const result = await this.handleGetInstalledProducts(req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to get installed products',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async purchaseProduct(req, res) {
+        try {
+            const productId = parseInt(req.params.productId);
+            const result = await this.handlePurchaseProduct(productId, req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to purchase product',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async installProduct(req, res) {
+        try {
+            const productId = parseInt(req.params.productId);
+            const result = await this.handleInstallProduct(productId, req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to install product',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async uninstallProduct(req, res) {
+        try {
+            const productId = parseInt(req.params.productId);
+            const result = await this.handleUninstallProduct(productId, req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to uninstall product',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async rateProduct(req, res) {
+        try {
+            const productId = parseInt(req.params.productId);
+            const result = await this.handleRateProduct(productId, req.body, req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to rate product',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
 }
 exports.StoreController = StoreController;

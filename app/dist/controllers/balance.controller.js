@@ -85,5 +85,32 @@ class BalanceController {
             throw new Error(error instanceof Error ? error.message : 'Internal server error');
         }
     }
+    // Express middleware handlers
+    static async getBalance(req, res) {
+        try {
+            const result = await this.handleGetBalance(req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to get balance',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async updateBalance(req, res) {
+        try {
+            const result = await this.handleUpdateBalance(req.body, req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to update balance',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
 }
 exports.BalanceController = BalanceController;

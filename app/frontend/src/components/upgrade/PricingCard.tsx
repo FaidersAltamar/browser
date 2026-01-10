@@ -70,7 +70,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
     >
       {isPopular && (
         <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold py-1 px-3 rounded-full transform rotate-12">
-          Phổ biến nhất
+          Más Popular
         </div>
       )}
       
@@ -83,7 +83,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
         <div className="mb-4">
           <div className="flex items-end">
             <span className="text-3xl font-bold">{formatCurrency(pricing.monthlyPrice)}</span>
-            <span className="text-gray-600 ml-1 text-sm">/tháng</span>
+            <span className="text-gray-600 ml-1 text-sm">/mes</span>
           </div>
           
           <div className="text-sm text-gray-600 mt-1">
@@ -91,7 +91,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
               <div className="flex items-center">
                 <p>
                   <span className="line-through">{formatCurrency(pkg.pricingOptions[1].monthlyPrice * period)}</span>
-                  {' '}{formatCurrency(pricing.totalPrice)} cho {period} tháng
+                  {' '}{formatCurrency(pricing.totalPrice)} por {period} meses
                 </p>
                 {pricing.discount > 0 && (
                   <span className="ml-2 bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded">
@@ -101,7 +101,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
               </div>
             )}
             {period === 1 && (
-              <p>Thanh toán {formatCurrency(pricing.totalPrice)}</p>
+              <p>Pago {formatCurrency(pricing.totalPrice)}</p>
             )}
           </div>
         </div>
@@ -111,7 +111,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
             <div className="flex items-center justify-between mb-2">
               <label className="text-sm font-medium flex items-center">
                 <Users className="w-4 h-4 mr-1" />
-                Số lượng thành viên
+                Número de miembros
               </label>
               <span className="text-sm font-bold">{pkg.maxMembers}</span>
             </div>
@@ -143,7 +143,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
           onClick={onSelect}
           className={`w-full py-2.5 px-4 rounded-lg font-medium transition-colors duration-200 ${tierStyle.buttonColor}`}
         >
-          Chọn Gói
+          Seleccionar Paquete
         </button>
       </div>
     </div>

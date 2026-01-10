@@ -261,14 +261,24 @@ export const ProfileFunctionalService = {
    * @returns {Promise<{success: boolean, sessionId?: string}>}
    */
   async launchProfile(profileId: string): Promise<{ success: boolean, sessionId?: string }> {
-    console.log(`Service: Launching profile ${profileId}`);
+    console.log(`🚀 Service: Launching profile ${profileId}`);
     // Controller mong đợi data là một object
     const payload = { profileId };
-    return handleMutationResponse(
-      ElectronAPIClient.request('POST', '/api/profiles/launch', payload),
-      'ProfileFunctionalService',
-      'launchProfile'
-    );
+    console.log(`📦 Payload:`, payload);
+    try {
+      const requestPromise = ElectronAPIClient.request('POST', '/api/profiles/launch', payload);
+      console.log(`📡 Request sent, waiting for response...`);
+      const result = await handleMutationResponse(
+        requestPromise,
+        'ProfileFunctionalService',
+        'launchProfile'
+      );
+      console.log(`✅ Service received result:`, result);
+      return result;
+    } catch (error) {
+      console.error(`❌ Service error launching profile:`, error);
+      throw error;
+    }
   },
 
   /**

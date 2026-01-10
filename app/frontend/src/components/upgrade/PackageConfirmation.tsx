@@ -18,7 +18,7 @@ const PackageConfirmation = ({
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Xác Nhận Gói Của Bạn</h2>
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Confirma Tu Paquete</h2>
       
       <div className="bg-gray-50 rounded-xl p-6 mb-8 border border-gray-200">
         <div className="flex flex-col md:flex-row justify-between">
@@ -27,12 +27,12 @@ const PackageConfirmation = ({
             <p className="text-gray-600 mb-4">{pkg.description}</p>
             
             <div className="mb-4">
-              <h4 className="font-medium text-gray-700 mb-2">Thời hạn:</h4>
+              <h4 className="font-medium text-gray-700 mb-2">Duración:</h4>
               <p className="text-lg font-medium">{formatSubscriptionPeriod(period)}</p>
             </div>
             
             <div>
-              <h4 className="font-medium text-gray-700 mb-2">Tính năng bao gồm:</h4>
+              <h4 className="font-medium text-gray-700 mb-2">Características incluidas:</h4>
               <ul className="space-y-2">
                 {pkg.features.map((feature, index) => (
                   <li key={index} className="flex items-start">
@@ -45,25 +45,25 @@ const PackageConfirmation = ({
           </div>
           
           <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mt-6 md:mt-0 md:ml-6 md:min-w-[250px]">
-            <h4 className="text-lg font-bold text-gray-800 mb-4">Tóm tắt đơn hàng</h4>
+            <h4 className="text-lg font-bold text-gray-800 mb-4">Resumen del pedido</h4>
             
             <div className="space-y-3 mb-4">
               <div className="flex justify-between">
-                <span className="text-gray-600">Gói:</span>
+                <span className="text-gray-600">Paquete:</span>
                 <span className="font-medium">{pkg.name}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Thời hạn:</span>
+                <span className="text-gray-600">Duración:</span>
                 <span className="font-medium">{formatSubscriptionPeriod(period)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Thanh toán hàng tháng:</span>
+                <span className="text-gray-600">Pago mensual:</span>
                 <span className="font-medium">{formatCurrency(pricing.monthlyPrice)}</span>
               </div>
               
               {period > 1 && pricing.discount > 0 && (
                 <div className="flex justify-between text-green-600">
-                  <span>Tiết kiệm:</span>
+                  <span>Ahorro:</span>
                   <span>-{pricing.discount}%</span>
                 </div>
               )}
@@ -71,13 +71,13 @@ const PackageConfirmation = ({
             
             <div className="border-t border-gray-200 pt-3 mb-6">
               <div className="flex justify-between font-bold text-lg">
-                <span>Tổng cộng:</span>
+                <span>Total:</span>
                 <span>{formatCurrency(pricing.totalPrice)}</span>
               </div>
               <div className="text-xs text-gray-500 mt-1">
                 {period > 1
-                  ? `Thanh toán một lần cho ${period} tháng`
-                  : 'Thanh toán hàng tháng'}
+                  ? `Pago único por ${period} meses`
+                  : 'Pago mensual'}
               </div>
             </div>
           </div>
@@ -90,14 +90,14 @@ const PackageConfirmation = ({
           className="flex items-center justify-center py-2.5 px-4 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors duration-200"
         >
           <ChevronLeft className="w-5 h-5 mr-1" />
-          Quay lại
+          Volver
         </button>
         
         <button
           onClick={onConfirm}
           className="py-3 px-6 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200"
         >
-          Tiến hành thanh toán
+          Proceder al pago
         </button>
       </div>
     </div>

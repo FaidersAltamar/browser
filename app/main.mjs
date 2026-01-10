@@ -230,14 +230,18 @@ async function routeToController(method, url, data, headers = {}) {
         
       case 'profiles':
         // Check sub-scope for profiles to route to correct controller
+        console.log(`🔍 Routing profiles request: subScope=${subScope}, method=${method}, url=${url}`);
         if (subScope === 'groups') {
           // profile.routes.ts group endpoints: GroupProfileController
+          console.log('📍 Routing to GroupProfileController');
           return await GroupProfileController.handleRequest(method, url, data, headers, authenticatedUser);
         } else if (subScope === 'launch') {
           // profile.routes.ts launch endpoints: LaunchController
+          console.log('📍 Routing to LaunchController');
           return await LaunchController.handleRequest(method, url, data, headers, authenticatedUser);
         } else {
           // profile.routes.ts main endpoints: ProfileController
+          console.log('📍 Routing to ProfileController');
           return await ProfileController.handleRequest(method, url, data, headers, authenticatedUser);
         }
         
@@ -282,10 +286,19 @@ async function routeToController(method, url, data, headers = {}) {
 
 // Hàm tạo phản hồi lỗi đã được sửa đổi
 function createErrorResponse(status, message) {
+  // statusText must only contain ISO-8859-1 characters, so use a safe default
+  // The actual message will be in the message field
+  const safeStatusText = status === 400 ? 'Bad Request' :
+                         status === 401 ? 'Unauthorized' :
+                         status === 403 ? 'Forbidden' :
+                         status === 404 ? 'Not Found' :
+                         status === 500 ? 'Internal Server Error' :
+                         status === 503 ? 'Service Unavailable' : 'Error';
+  
   return {
     ok: false,
     status: status,
-    statusText: message,
+    statusText: safeStatusText,
     // Chỉ trả về dữ liệu thuần túy. Frontend sẽ truy cập response.message trực tiếp.
     message: message // Thêm thuộc tính 'message' để frontend dễ dàng đọc
   };
@@ -325,15 +338,15 @@ async function makeBackendRequest(method, url, data, headers = {}) {
 // Generic IPC handler cho tất cả backend requests với headers support
 ipcMain.handle('backend-request', async (event, method, url, data, headers) => {
   console.log('📨 IPC request received:', method, url);
-  if (data) {
-    console.log('📦 Request data:', JSON.stringify(data).substring(0, 200));
-  }
+  console.log('📦 Request data:', data ? JSON.stringify(data).substring(0, 500) : 'No data');
+  console.log('📋 Request headers:', headers ? Object.keys(headers).join(', ') : 'No headers');
   try {
     const result = await makeBackendRequest(method, url, data, headers);
-    console.log('✅ Request successful');
+    console.log('✅ Request successful, result:', JSON.stringify(result).substring(0, 200));
     return result;
   } catch (error) {
     console.error('❌ Request failed:', error);
+    console.error('❌ Error stack:', error.stack);
     throw error;
   }
 });

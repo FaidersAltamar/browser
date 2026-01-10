@@ -6,7 +6,7 @@ import StepIndicator from '../components/upgrade/StepIndicator';
 import { useUpgrade } from '../hooks/us/useUpgrade';
 
 export default function UpgradePage() {
-  // Sử dụng hook mới thay thế cho useUpgradePage
+  // Usar nuevo hook en lugar de useUpgradePage
   const {
     selectedPackage,
     selectedPeriod,
@@ -60,10 +60,10 @@ export default function UpgradePage() {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <div className="container mx-auto px-4 py-8 md:py-12">
         <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-2">
-          Nâng Cấp
+          Actualizar
         </h1>
         <p className="text-center text-gray-600 mb-8 max-w-3xl mx-auto">
-          Mở khóa tất cả các tính năng cao cấp và tận hưởng trải nghiệm duyệt web an toàn, riêng tư nhất
+          Desbloquea todas las funciones premium y disfruta de la experiencia de navegación más segura y privada
         </p>
 
         <div className="mb-12">

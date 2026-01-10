@@ -241,5 +241,98 @@ class UpgradeController {
             throw new Error(error instanceof Error ? error.message : 'Subscription change failed');
         }
     }
+    // Express middleware handlers
+    static async getPackages(req, res) {
+        try {
+            const result = await this.handleGetPackages(req.query);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to get packages',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async getPackageDetails(req, res) {
+        try {
+            const { tier, type } = req.params;
+            const result = await this.handleGetPackageDetails(tier, type, req.query);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to get package details',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async getCurrentSubscription(req, res) {
+        try {
+            const result = await this.handleGetCurrentSubscription(req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to get current subscription',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async calculatePrice(req, res) {
+        try {
+            const result = await this.handleCalculatePrice(req.body, req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to calculate price',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async getSubscriptionHistory(req, res) {
+        try {
+            const result = await this.handleGetSubscriptionHistory(req.query, req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to get subscription history',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async previewUpgrade(req, res) {
+        try {
+            const result = await this.handlePreviewUpgrade(req.body, req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to preview upgrade',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async changeSubscription(req, res) {
+        try {
+            const result = await this.handleChangeSubscription(req.body, req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to change subscription',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
 }
 exports.UpgradeController = UpgradeController;

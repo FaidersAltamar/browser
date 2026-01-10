@@ -5,9 +5,9 @@ interface StepIndicatorProps {
 
 const StepIndicator = ({ currentStep, totalSteps }) => {
   const steps = [
-    { id: 1, name: 'Chọn Gói' },
-    { id: 2, name: 'Xác Nhận' },
-    { id: 3, name: 'Thanh Toán' },
+    { id: 1, name: 'Seleccionar Paquete' },
+    { id: 2, name: 'Confirmar' },
+    { id: 3, name: 'Pagar' },
   ];
 
   return (

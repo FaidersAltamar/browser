@@ -33,14 +33,14 @@ export default function PackageSelection({ onSelectPackage }) {
   };
   
   const periodOptions: {value: SubscriptionPeriod, label: string}[] = [
-    { value: 1, label: 'Hàng tháng' },
-    { value: 6, label: '6 tháng' },
-    { value: 12, label: '12 tháng' }
+    { value: 1, label: 'Mensual' },
+    { value: 6, label: '6 meses' },
+    { value: 12, label: '12 meses' }
   ];
   
   return (
     <div>
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Chọn Gói Bảo Vệ</h2>
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Seleccionar Paquete de Protección</h2>
       
       <div className="mb-8">
         <TabGroup onChange={(index) => {
@@ -73,14 +73,14 @@ export default function PackageSelection({ onSelectPackage }) {
                   : 'text-gray-600 hover:bg-white/[0.12] hover:text-gray-700'
               }`
             }>
-              Tùy chỉnh
+              Personalizado
             </Tab>
           </TabList>
         </TabGroup>
       </div>
       
       <div className="mb-6">
-        <h3 className="text-lg font-medium mb-3">Thời hạn thanh toán</h3>
+        <h3 className="text-lg font-medium mb-3">Período de pago</h3>
         <div className="flex flex-wrap gap-4">
           {periodOptions.map((option) => (
             <button
@@ -97,7 +97,7 @@ export default function PackageSelection({ onSelectPackage }) {
                 {option.label}
                 {option.value > 1 && (
                   <span className="ml-2 text-xs px-2 py-0.5 bg-green-100 text-green-800 rounded-full">
-                    Giảm {packages[0]?.pricingOptions[option.value].discount || 0}%
+                    Descuento {packages[0]?.pricingOptions[option.value].discount || 0}%
                   </span>
                 )}
               </div>
@@ -126,29 +126,29 @@ export default function PackageSelection({ onSelectPackage }) {
             
             <div className="p-4">
               <div className="mb-4">
-                <div className="text-sm text-gray-500">Giá gói:</div>
+                <div className="text-sm text-gray-500">Precio del paquete:</div>
                 <div className="flex items-end gap-1">
                   <span className="text-3xl font-bold">
                     {formatCurrency(pkg.pricingOptions[selectedPeriod].monthlyPrice)}
                   </span>
-                  <span className="text-gray-500 mb-1">/ tháng</span>
+                  <span className="text-gray-500 mb-1">/ mes</span>
                 </div>
                 
                 {selectedPeriod > 1 && (
                   <div className="text-sm text-gray-600 mt-1">
-                    {formatCurrency(pkg.pricingOptions[selectedPeriod].totalPrice)} thanh toán một lần
+                    {formatCurrency(pkg.pricingOptions[selectedPeriod].totalPrice)} pago único
                   </div>
                 )}
               </div>
               
               <div className="space-y-3 mb-4">
-                <div className="text-sm text-gray-500">Đề xuất cho:</div>
+                <div className="text-sm text-gray-500">Recomendado para:</div>
                 <div className="flex items-center text-gray-700">
                   <Users className="w-4 h-4 mr-2" />
                   <span>{pkg.recommendedFor}</span>
                 </div>
                 
-                <div className="text-sm text-gray-500 mt-3">Tính năng bao gồm:</div>
+                <div className="text-sm text-gray-500 mt-3">Características incluidas:</div>
                 <ul className="space-y-2">
                   {pkg.features.map((feature, i) => (
                     <li key={i} className="flex text-sm">
@@ -168,7 +168,7 @@ export default function PackageSelection({ onSelectPackage }) {
                   'bg-gray-800 hover:bg-gray-900'
                 }`}
               >
-                Chọn gói này
+                Seleccionar este paquete
               </button>
             </div>
           </div>

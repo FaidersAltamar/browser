@@ -252,5 +252,102 @@ class DepositController {
             throw new Error(error instanceof Error ? error.message : 'Failed to upload payment proof');
         }
     }
+    // Express middleware handlers
+    static async getFees(req, res) {
+        try {
+            const result = await this.handleGetFees();
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to get fees',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async getPaymentDetails(req, res) {
+        try {
+            const result = await this.handleGetPaymentDetails(req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to get payment details',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async createDeposit(req, res) {
+        try {
+            const result = await this.handleCreateDeposit(req.body, req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to create deposit',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async processPayment(req, res) {
+        try {
+            const result = await this.handleProcessPayment(req.body, req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to process payment',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async getTransactionHistory(req, res) {
+        try {
+            const result = await this.handleGetTransactionHistory(req.query, req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to get transaction history',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async checkTransactionStatus(req, res) {
+        try {
+            const transactionId = req.params.transactionId;
+            const result = await this.handleCheckTransactionStatus(transactionId, req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to check transaction status',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
+    static async uploadPaymentProof(req, res) {
+        try {
+            const file = req.file;
+            const result = await this.handleUploadPaymentProof({
+                transactionId: req.body.transactionId,
+                file
+            }, req.user || null);
+            res.json(result);
+        }
+        catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message || 'Failed to upload payment proof',
+                error: error instanceof Error ? error.message : 'UNKNOWN_ERROR'
+            });
+        }
+    }
 }
 exports.DepositController = DepositController;

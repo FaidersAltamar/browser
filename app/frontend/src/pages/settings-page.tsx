@@ -144,7 +144,7 @@ export default function SettingsPage() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        <span className="ml-2 text-lg">Đang tải cài đặt...</span>
+        <span className="ml-2 text-lg">Cargando configuración...</span>
       </div>
     );
   }
@@ -152,18 +152,18 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Cài đặt</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Configuración</h1>
       </div>
       
       <Tabs defaultValue="personal" value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-2 mb-6">
           <TabsTrigger value="personal" className="flex items-center gap-2">
             <User className="h-4 w-4" />
-            <span>Cài đặt cá nhân</span>
+            <span>Configuración personal</span>
           </TabsTrigger>
           <TabsTrigger value="system" className="flex items-center gap-2">
             <Monitor className="h-4 w-4" />
-            <span>Cài đặt hệ thống</span>
+            <span>Configuración del sistema</span>
           </TabsTrigger>
         </TabsList>
         
@@ -171,8 +171,8 @@ export default function SettingsPage() {
           {/* Profile Card */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-xl">Thông tin tài khoản</CardTitle>
-              <CardDescription>Cập nhật thông tin cá nhân của bạn</CardDescription>
+              <CardTitle className="text-xl">Información de cuenta</CardTitle>
+              <CardDescription>Actualiza tu información personal</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handlePersonalSubmit} className="space-y-6">
@@ -184,14 +184,14 @@ export default function SettingsPage() {
                   </Avatar>
                   <div>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                      Avatar được tạo tự động từ chữ cái đầu của tên.
+                      El avatar se genera automáticamente desde la primera letra del nombre.
                     </p>
                   </div>
                 </div>
                 
                 <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6 mt-6">
                   <div className="sm:col-span-3">
-                    <Label htmlFor="firstName" className="block text-sm font-medium">Tên</Label>
+                    <Label htmlFor="firstName" className="block text-sm font-medium">Nombre</Label>
                     <Input
                       id="firstName"
                       name="firstName"
@@ -202,7 +202,7 @@ export default function SettingsPage() {
                     />
                   </div>
                   <div className="sm:col-span-3">
-                    <Label htmlFor="lastName" className="block text-sm font-medium">Họ</Label>
+                    <Label htmlFor="lastName" className="block text-sm font-medium">Apellido</Label>
                     <Input
                       id="lastName"
                       name="lastName"
@@ -213,7 +213,7 @@ export default function SettingsPage() {
                     />
                   </div>
                   <div className="sm:col-span-6">
-                    <Label htmlFor="email" className="block text-sm font-medium">Địa chỉ email</Label>
+                    <Label htmlFor="email" className="block text-sm font-medium">Dirección de email</Label>
                     <Input
                       id="email"
                       name="email"
@@ -234,10 +234,10 @@ export default function SettingsPage() {
                     {isUpdatingPersonal ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Đang lưu...
-                      </>
+                        Guardando...
+                      </> 
                     ) : (
-                      "Lưu thay đổi"
+                      "Guardar cambios"
                     )}
                   </Button>
                 </div>
@@ -250,14 +250,14 @@ export default function SettingsPage() {
             <CardHeader>
               <CardTitle className="text-xl flex items-center gap-2">
                 <Lock className="h-5 w-5" />
-                Đổi mật khẩu
+                Cambiar contraseña
               </CardTitle>
-              <CardDescription>Cập nhật mật khẩu để bảo mật tài khoản của bạn</CardDescription>
+              <CardDescription>Actualiza tu contraseña para proteger tu cuenta</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handlePasswordSubmit} className="space-y-4">
                 <div>
-                  <Label htmlFor="currentPassword">Mật khẩu hiện tại</Label>
+                  <Label htmlFor="currentPassword">Contraseña actual</Label>
                   <Input 
                     id="currentPassword" 
                     name="currentPassword"
@@ -267,7 +267,7 @@ export default function SettingsPage() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="newPassword">Mật khẩu mới</Label>
+                  <Label htmlFor="newPassword">Nueva contraseña</Label>
                   <Input 
                     id="newPassword" 
                     name="newPassword"
@@ -277,7 +277,7 @@ export default function SettingsPage() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="confirmPassword">Xác nhận mật khẩu mới</Label>
+                  <Label htmlFor="confirmPassword">Confirmar nueva contraseña</Label>
                   <Input 
                     id="confirmPassword" 
                     name="confirmPassword"
@@ -295,10 +295,10 @@ export default function SettingsPage() {
                     {isUpdatingPassword ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Đang cập nhật...
+                        Actualizando...
                       </>
                     ) : (
-                      "Cập nhật mật khẩu"
+                      "Actualizar contraseña"
                     )}
                   </Button>
                 </div>
@@ -313,37 +313,37 @@ export default function SettingsPage() {
             <CardHeader>
               <CardTitle className="text-xl flex items-center gap-2">
                 <Palette className="h-5 w-5" />
-                Giao diện và ngôn ngữ
+                Apariencia e idioma
               </CardTitle>
-              <CardDescription>Tùy chỉnh giao diện và ngôn ngữ hiển thị</CardDescription>
+              <CardDescription>Personaliza la apariencia y el idioma de visualización</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSystemSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   <div>
-                    <Label htmlFor="theme">Giao diện</Label>
+                    <Label htmlFor="theme">Tema</Label>
                     <Select 
                       value={systemFormData.theme} 
                       onValueChange={handleThemeChange}
                     >
                       <SelectTrigger className="mt-1">
-                        <SelectValue placeholder="Chọn giao diện" />
+                        <SelectValue placeholder="Seleccionar tema" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="light">Sáng</SelectItem>
-                        <SelectItem value="dark">Tối</SelectItem>
+                        <SelectItem value="light">Claro</SelectItem>
+                        <SelectItem value="dark">Oscuro</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   
                   <div>
-                    <Label htmlFor="language">Ngôn ngữ</Label>
+                    <Label htmlFor="language">Idioma</Label>
                     <Select 
                       value={systemFormData.language} 
                       onValueChange={(value) => handleSystemInputChange("language", value)}
                     >
                       <SelectTrigger className="mt-1">
-                        <SelectValue placeholder="Chọn ngôn ngữ" />
+                        <SelectValue placeholder="Seleccionar idioma" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="vi">Tiếng Việt</SelectItem>
@@ -354,13 +354,13 @@ export default function SettingsPage() {
                   </div>
                   
                   <div>
-                    <Label htmlFor="timezone">Múi giờ</Label>
+                    <Label htmlFor="timezone">Zona horaria</Label>
                     <Select 
                       value={systemFormData.timezone} 
                       onValueChange={(value) => handleSystemInputChange("timezone", value)}
                     >
                       <SelectTrigger className="mt-1">
-                        <SelectValue placeholder="Chọn múi giờ" />
+                        <SelectValue placeholder="Seleccionar zona horaria" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Asia/Ho_Chi_Minh">Hồ Chí Minh (GMT+7)</SelectItem>
@@ -381,17 +381,17 @@ export default function SettingsPage() {
             <CardHeader>
               <CardTitle className="text-xl flex items-center gap-2">
                 <Bell className="h-5 w-5" />
-                Thông báo
+                Notificaciones
               </CardTitle>
-              <CardDescription>Quản lý cách bạn nhận thông báo</CardDescription>
+              <CardDescription>Gestiona cómo recibes las notificaciones</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label className="text-base">Thông báo trong ứng dụng</Label>
+                    <Label className="text-base">Notificaciones en la aplicación</Label>
                     <p className="text-sm text-muted-foreground">
-                      Nhận thông báo bên trong ứng dụng
+                      Recibir notificaciones dentro de la aplicación
                     </p>
                   </div>
                   <Switch
@@ -402,9 +402,9 @@ export default function SettingsPage() {
                 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label className="text-base">Thông báo trên màn hình</Label>
+                    <Label className="text-base">Notificaciones en el escritorio</Label>
                     <p className="text-sm text-muted-foreground">
-                      Hiển thị thông báo ngay cả khi bạn không đang sử dụng ứng dụng
+                      Mostrar notificaciones incluso cuando no estás usando la aplicación
                     </p>
                   </div>
                   <Switch
@@ -415,9 +415,9 @@ export default function SettingsPage() {
                 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label className="text-base">Âm thanh</Label>
+                    <Label className="text-base">Sonido</Label>
                     <p className="text-sm text-muted-foreground">
-                      Phát âm thanh khi có thông báo mới
+                      Reproducir sonido cuando hay una nueva notificación
                     </p>
                   </div>
                   <Switch
@@ -428,9 +428,9 @@ export default function SettingsPage() {
                 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label className="text-base">Tự động cập nhật</Label>
+                    <Label className="text-base">Actualización automática</Label>
                     <p className="text-sm text-muted-foreground">
-                      Tự động cập nhật ứng dụng khi có phiên bản mới
+                      Actualizar automáticamente la aplicación cuando hay una nueva versión
                     </p>
                   </div>
                   <Switch
@@ -450,10 +450,10 @@ export default function SettingsPage() {
                 {isUpdatingSystem ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Đang lưu...
+                    Guardando...
                   </>
                 ) : (
-                  "Lưu thay đổi"
+                  "Guardar cambios"
                 )}
               </Button>
             </CardFooter>

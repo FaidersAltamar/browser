@@ -63,63 +63,63 @@ interface NodeCategory {
 const nodeCategories: NodeCategory[] = [
   {
     id: 'general',
-    name: 'Chung',
+    name: 'General',
     icon: <Zap className="h-4 w-4" />,
     color: '#f59e0b',
     bgColor: '#78350f',
     nodes: [
       {
         id: 'start',
-        label: 'Bắt đầu',
+        label: 'Iniciar',
         icon: <Play className="h-4 w-4" />,
         type: 'triggerNode',
-        description: 'Điểm bắt đầu của workflow. Không có tham số.',
+        description: 'Punto de inicio del workflow. No tiene parámetros.',
         parameters: {}
       },
       {
         id: 'executeWorkflow',
-        label: 'Gọi workflow',
+        label: 'Llamar workflow',
         icon: <Folder className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Gọi và thực thi một workflow khác. Tham số: workflowId (string, ví dụ: "login_process").',
+        description: 'Llamar y ejecutar otro workflow. Parámetros: workflowId (string, ejemplo: "login_process").',
         parameters: {
           workflowId: ''
         }
       },
       {
         id: 'end',
-        label: 'Kết thúc',
+        label: 'Finalizar',
         icon: <Square className="h-4 w-4" />,
         type: 'outputNode',
-        description: 'Điểm kết thúc của workflow. Không có tham số.',
+        description: 'Punto de finalización del workflow. No tiene parámetros.',
         parameters: {}
       },
       {
         id: 'blocksGroup',
-        label: 'Nhóm khối',
+        label: 'Agrupar bloques',
         icon: <LayoutPanelTop className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Nhóm các node để tổ chức workflow. Tham số: groupName (string, ví dụ: "Authentication Steps").',
+        description: 'Agrupar nodos para organizar el workflow. Parámetros: groupName (string, ejemplo: "Pasos de Autenticación").',
         parameters: {
-          groupName: 'Nhóm 1'
+          groupName: 'Grupo 1'
         }
       },
       {
         id: 'note',
-        label: 'Ghi chú',
+        label: 'Nota',
         icon: <FileText className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Thêm ghi chú vào workflow. Tham số: text (string, ví dụ: "This is a note").',
+        description: 'Agregar una nota al workflow. Parámetros: text (string, ejemplo: "Esta es una nota").',
         parameters: {
           text: ''
         }
       },
       {
         id: 'workflowState',
-        label: 'Trạng thái workflow',
+        label: 'Estado del workflow',
         icon: <Play className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Đặt trạng thái của workflow. Tham số: state (string, ví dụ: "start", "pause", "stop").',
+        description: 'Establecer el estado del workflow. Parámetros: state (string, ejemplo: "start", "pause", "stop").',
         parameters: {
           state: 'start'
         }
@@ -128,17 +128,17 @@ const nodeCategories: NodeCategory[] = [
   },
   {
     id: 'browser',
-    name: 'Trình duyệt',
+    name: 'Navegador',
     icon: <Network className="h-4 w-4" />,
     color: '#3b82f6',
     bgColor: '#1e3a8a',
     nodes: [
       {
         id: 'openURL',
-        label: 'Mở URL',
+        label: 'Abrir URL',
         icon: <ExternalLink className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Mở một trang web. Tham số: url (string, ví dụ: "https://www.example.com"), urlVariableRef (string, ví dụ: "$targetUrl"), minWait (ms), maxWait (ms).',
+        description: 'Abrir una página web. Parámetros: url (string, ejemplo: "https://www.example.com"), urlVariableRef (string, ejemplo: "$targetUrl"), minWait (ms), maxWait (ms).',
         parameters: {
           url: '',
           urlVariableRef: '',
@@ -148,10 +148,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'imageSearch',
-        label: 'Tìm hình ảnh',
+        label: 'Buscar imagen',
         icon: <Search className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Tìm kiếm hình ảnh trên công cụ tìm kiếm. Tham số: query (string, ví dụ: "cats"), queryVariableRef (string, ví dụ: "$searchQuery"), minWait (ms), maxWait (ms).',
+        description: 'Buscar imágenes en un motor de búsqueda. Parámetros: query (string, ejemplo: "gatos"), queryVariableRef (string, ejemplo: "$searchQuery"), minWait (ms), maxWait (ms).',
         parameters: {
           query: '',
           queryVariableRef: '',
@@ -161,18 +161,18 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'activeTab',
-        label: 'Tab hiện tại',
+        label: 'Pestaña actual',
         icon: <LayoutPanelTop className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Chuyển tới tab đang hoạt động. Không có tham số.',
+        description: 'Cambiar a la pestaña activa. No tiene parámetros.',
         parameters: {}
       },
       {
         id: 'newTab',
-        label: 'Tab mới',
+        label: 'Nueva pestaña',
         icon: <Plus className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Mở một tab mới. Tham số: minWait (ms), maxWait (ms).',
+        description: 'Abrir una nueva pestaña. Parámetros: minWait (ms), maxWait (ms).',
         parameters: {
           minWait: 500,
           maxWait: 2000
@@ -180,20 +180,20 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'resourceStatus',
-        label: 'Trạng thái tài nguyên',
+        label: 'Estado del recurso',
         icon: <FileText className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Kiểm tra trạng thái tài nguyên trên trang. Tham số: resourceType (string, ví dụ: "image", "script").',
+        description: 'Verificar el estado de un recurso en la página. Parámetros: resourceType (string, ejemplo: "image", "script").',
         parameters: {
           resourceType: ''
         }
       },
       {
         id: 'switchTab',
-        label: 'Chuyển tab',
+        label: 'Cambiar pestaña',
         icon: <ArrowRightLeft className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Chuyển đến tab khác. Tham số: tabIndex (number, ví dụ: 0), tabIndexVariableRef (string, ví dụ: "$tabIndex"), minWait (ms), maxWait (ms).',
+        description: 'Cambiar a otra pestaña. Parámetros: tabIndex (number, ejemplo: 0), tabIndexVariableRef (string, ejemplo: "$tabIndex"), minWait (ms), maxWait (ms).',
         parameters: {
           tabIndex: 0,
           tabIndexVariableRef: '',
@@ -203,10 +203,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'newWindow',
-        label: 'Cửa sổ mới',
+        label: 'Nueva ventana',
         icon: <LayoutPanelTop className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Mở cửa sổ trình duyệt mới. Tham số: minWait (ms), maxWait (ms).',
+        description: 'Abrir una nueva ventana del navegador. Parámetros: minWait (ms), maxWait (ms).',
         parameters: {
           minWait: 500,
           maxWait: 2000
@@ -214,10 +214,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'goBack',
-        label: 'Quay lại',
+        label: 'Atrás',
         icon: <ArrowRightLeft className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Quay lại trang trước. Tham số: minWait (ms), maxWait (ms).',
+        description: 'Volver a la página anterior. Parámetros: minWait (ms), maxWait (ms).',
         parameters: {
           minWait: 500,
           maxWait: 2000
@@ -225,10 +225,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'goForward',
-        label: 'Đi tiếp',
+        label: 'Adelante',
         icon: <ArrowRightLeft className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Đi đến trang tiếp theo. Tham số: minWait (ms), maxWait (ms).',
+        description: 'Ir a la página siguiente. Parámetros: minWait (ms), maxWait (ms).',
         parameters: {
           minWait: 500,
           maxWait: 2000
@@ -236,10 +236,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'closeTab',
-        label: 'Đóng tab',
+        label: 'Cerrar pestaña',
         icon: <X className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Đóng tab hiện tại. Tham số: minWait (ms), maxWait (ms).',
+        description: 'Cerrar la pestaña actual. Parámetros: minWait (ms), maxWait (ms).',
         parameters: {
           minWait: 500,
           maxWait: 2000
@@ -247,10 +247,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'reloadPage',
-        label: 'Tải lại trang',
+        label: 'Recargar página',
         icon: <Repeat className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Tải lại trang hiện tại. Tham số: minWait (ms), maxWait (ms).',
+        description: 'Recargar la página actual. Parámetros: minWait (ms), maxWait (ms).',
         parameters: {
           minWait: 1000,
           maxWait: 3000
@@ -258,10 +258,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'getURL',
-        label: 'Lấy URL',
+        label: 'Obtener URL',
         icon: <Link className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Lấy URL của trang hiện tại và lưu vào biến. Tham số: resultVar (string, ví dụ: "currentUrl").',
+        description: 'Obtener la URL de la página actual y guardarla en una variable. Parámetros: resultVar (string, ejemplo: "currentUrl").',
         parameters: {
           resultVar: ''
         }
@@ -270,7 +270,7 @@ const nodeCategories: NodeCategory[] = [
   },
   {
     id: 'webInteraction',
-    name: 'Tương tác Web',
+    name: 'Interacción Web',
     icon: <MousePointerClick className="h-4 w-4" />,
     color: '#ec4899',
     bgColor: '#831843',
@@ -280,7 +280,7 @@ const nodeCategories: NodeCategory[] = [
         label: 'Click',
         icon: <MousePointerClick className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Click vào phần tử. Tham số: selectorType (string, ví dụ: "css"), selectorValue (string, ví dụ: "#myButton"), selectorVariableRef (string, ví dụ: "$buttonSelector"), clickType (string, ví dụ: "left"), timeout (ms), minWait (ms), maxWait (ms).',
+        description: 'Hacer clic en un elemento. Parámetros: selectorType (string, ejemplo: "css"), selectorValue (string, ejemplo: "#myButton"), selectorVariableRef (string, ejemplo: "$buttonSelector"), clickType (string, ejemplo: "left"), timeout (ms), minWait (ms), maxWait (ms).',
         parameters: {
           selectorType: 'css',
           selectorValue: '',
@@ -293,10 +293,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'doubleClick',
-        label: 'Double Click',
+        label: 'Doble Click',
         icon: <MousePointerClick className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Double click vào phần tử. Tham số: selectorType (string), selectorValue (string), selectorVariableRef (string, ví dụ: "$buttonSelector"), timeout (ms), minWait (ms), maxWait (ms).',
+        description: 'Hacer doble clic en un elemento. Parámetros: selectorType (string), selectorValue (string), selectorVariableRef (string, ejemplo: "$buttonSelector"), timeout (ms), minWait (ms), maxWait (ms).',
         parameters: {
           selectorType: 'css',
           selectorValue: '',
@@ -308,10 +308,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'rightClick',
-        label: 'Right Click',
+        label: 'Click Derecho',
         icon: <MousePointerClick className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Click chuột phải vào phần tử. Tham số: selectorType (string), selectorValue (string), selectorVariableRef (string, ví dụ: "$buttonSelector"), timeout (ms), minWait (ms), maxWait (ms).',
+        description: 'Hacer clic derecho en un elemento. Parámetros: selectorType (string), selectorValue (string), selectorVariableRef (string, ejemplo: "$buttonSelector"), timeout (ms), minWait (ms), maxWait (ms).',
         parameters: {
           selectorType: 'css',
           selectorValue: '',
@@ -326,7 +326,7 @@ const nodeCategories: NodeCategory[] = [
         label: 'Hover',
         icon: <MousePointer className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Di chuột qua phần tử. Tham số: selectorType (string), selectorValue (string), selectorVariableRef (string, ví dụ: "$elementSelector"), timeout (ms), minWait (ms), maxWait (ms).',
+        description: 'Pasar el mouse sobre un elemento. Parámetros: selectorType (string), selectorValue (string), selectorVariableRef (string, ejemplo: "$elementSelector"), timeout (ms), minWait (ms), maxWait (ms).',
         parameters: {
           selectorType: 'css',
           selectorValue: '',
@@ -341,7 +341,7 @@ const nodeCategories: NodeCategory[] = [
         label: 'Focus',
         icon: <MousePointer className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Đặt focus vào phần tử. Tham số: selectorType (string), selectorValue (string), selectorVariableRef (string, ví dụ: "$elementSelector"), timeout (ms), minWait (ms), maxWait (ms).',
+        description: 'Establecer el foco en un elemento. Parámetros: selectorType (string), selectorValue (string), selectorVariableRef (string, ejemplo: "$elementSelector"), timeout (ms), minWait (ms), maxWait (ms).',
         parameters: {
           selectorType: 'css',
           selectorValue: '',
@@ -353,10 +353,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'type',
-        label: 'Nhập',
+        label: 'Escribir',
         icon: <Type className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Nhập văn bản hoặc giá trị từ biến. Tham số: selectorType (string), selectorValue (string), selectorVariableRef (string, ví dụ: "$inputSelector"), text (string), variableRef (string, ví dụ: "$inputText"), delay (ms), minWait (ms), maxWait (ms).',
+        description: 'Escribir texto o valor desde una variable. Parámetros: selectorType (string), selectorValue (string), selectorVariableRef (string, ejemplo: "$inputSelector"), text (string), variableRef (string, ejemplo: "$inputText"), delay (ms), minWait (ms), maxWait (ms).',
         parameters: {
           selectorType: 'css',
           selectorValue: '',
@@ -370,10 +370,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'clearInput',
-        label: 'Xóa input',
+        label: 'Limpiar campo',
         icon: <X className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Xóa nội dung trường nhập liệu. Tham số: selectorType (string), selectorValue (string), selectorVariableRef (string, ví dụ: "$inputSelector"), timeout (ms), minWait (ms), maxWait (ms).',
+        description: 'Limpiar el contenido del campo de entrada. Parámetros: selectorType (string), selectorValue (string), selectorVariableRef (string, ejemplo: "$inputSelector"), timeout (ms), minWait (ms), maxWait (ms).',
         parameters: {
           selectorType: 'css',
           selectorValue: '',
@@ -385,10 +385,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'selectOption',
-        label: 'Chọn option',
+        label: 'Seleccionar opción',
         icon: <ListFilter className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Chọn option từ dropdown. Tham số: selectorType (string), selectorValue (string), selectorVariableRef (string, ví dụ: "$dropdownSelector"), value (string), variableRef (string, ví dụ: "$selectedValue"), timeout (ms), minWait (ms), maxWait (ms).',
+        description: 'Seleccionar una opción de un menú desplegable. Parámetros: selectorType (string), selectorValue (string), selectorVariableRef (string, ejemplo: "$dropdownSelector"), value (string), variableRef (string, ejemplo: "$selectedValue"), timeout (ms), minWait (ms), maxWait (ms).',
         parameters: {
           selectorType: 'css',
           selectorValue: '',
@@ -402,10 +402,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'upload',
-        label: 'Upload file',
+        label: 'Subir archivo',
         icon: <FileText className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Tải lên file. Tham số: selectorType (string), selectorValue (string), selectorVariableRef (string, ví dụ: "$fileInputSelector"), filePath (string), filePathVariableRef (string, ví dụ: "$filePath"), timeout (ms), minWait (ms), maxWait (ms).',
+        description: 'Subir un archivo. Parámetros: selectorType (string), selectorValue (string), selectorVariableRef (string, ejemplo: "$fileInputSelector"), filePath (string), filePathVariableRef (string, ejemplo: "$filePath"), timeout (ms), minWait (ms), maxWait (ms).',
         parameters: {
           selectorType: 'css',
           selectorValue: '',
@@ -419,10 +419,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'download',
-        label: 'Download file',
+        label: 'Descargar archivo',
         icon: <FileText className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Tải xuống file. Tham số: url (string), urlVariableRef (string, ví dụ: "$downloadUrl"), savePath (string), savePathVariableRef (string, ví dụ: "$savePath"), minWait (ms), maxWait (ms).',
+        description: 'Descargar un archivo. Parámetros: url (string), urlVariableRef (string, ejemplo: "$downloadUrl"), savePath (string), savePathVariableRef (string, ejemplo: "$savePath"), minWait (ms), maxWait (ms).',
         parameters: {
           url: '',
           urlVariableRef: '',
@@ -434,10 +434,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'scroll',
-        label: 'Scroll',
+        label: 'Desplazar',
         icon: <MoveVertical className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Cuộn trang. Tham số: direction (string, ví dụ: "down"), directionVariableRef (string, ví dụ: "$scrollDirection"), amount (number), amountVariableRef (string, ví dụ: "$scrollAmount"), minWait (ms), maxWait (ms).',
+        description: 'Desplazar la página. Parámetros: direction (string, ejemplo: "down"), directionVariableRef (string, ejemplo: "$scrollDirection"), amount (number), amountVariableRef (string, ejemplo: "$scrollAmount"), minWait (ms), maxWait (ms).',
         parameters: {
           direction: 'down',
           directionVariableRef: '',
@@ -449,10 +449,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'scrollToElement',
-        label: 'Scroll tới phần tử',
+        label: 'Desplazar al elemento',
         icon: <MoveVertical className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Cuộn đến phần tử. Tham số: selectorType (string), selectorValue (string), selectorVariableRef (string, ví dụ: "$elementSelector"), timeout (ms), minWait (ms), maxWait (ms).',
+        description: 'Desplazar hasta un elemento. Parámetros: selectorType (string), selectorValue (string), selectorVariableRef (string, ejemplo: "$elementSelector"), timeout (ms), minWait (ms), maxWait (ms).',
         parameters: {
           selectorType: 'css',
           selectorValue: '',
@@ -464,10 +464,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'pressKey',
-        label: 'Nhấn phím',
+        label: 'Presionar tecla',
         icon: <Type className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Nhấn phím. Tham số: key (string, ví dụ: "Enter"), keyVariableRef (string, ví dụ: "$keyToPress"), modifier (string), modifierVariableRef (string, ví dụ: "$modifierKey"), minWait (ms), maxWait (ms).',
+        description: 'Presionar una tecla. Parámetros: key (string, ejemplo: "Enter"), keyVariableRef (string, ejemplo: "$keyToPress"), modifier (string), modifierVariableRef (string, ejemplo: "$modifierKey"), minWait (ms), maxWait (ms).',
         parameters: {
           key: 'Enter',
           keyVariableRef: '',
@@ -479,10 +479,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'dragAndDrop',
-        label: 'Drag and Drop',
+        label: 'Arrastrar y Soltar',
         icon: <MoveHorizontal className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Kéo và thả phần tử. Tham số: sourceSelectorType (string), sourceSelectorValue (string), sourceSelectorVariableRef (string, ví dụ: "$sourceSelector"), targetSelectorType (string), targetSelectorValue (string), targetSelectorVariableRef (string, ví dụ: "$targetSelector"), timeout (ms), minWait (ms), maxWait (ms).',
+        description: 'Arrastrar y soltar un elemento. Parámetros: sourceSelectorType (string), sourceSelectorValue (string), sourceSelectorVariableRef (string, ejemplo: "$sourceSelector"), targetSelectorType (string), targetSelectorValue (string), targetSelectorVariableRef (string, ejemplo: "$targetSelector"), timeout (ms), minWait (ms), maxWait (ms).',
         parameters: {
           sourceSelectorType: 'css',
           sourceSelectorValue: '',
@@ -497,10 +497,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'getAttribute',
-        label: 'Lấy Attribute',
+        label: 'Obtener Atributo',
         icon: <Tag className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Lấy giá trị attribute của phần tử và lưu vào biến. Tham số: selectorType (string), selectorValue (string), selectorVariableRef (string, ví dụ: "$elementSelector"), attribute (string, ví dụ: "data-id"), resultVar (string, ví dụ: "elementId").',
+        description: 'Obtener el valor de un atributo de un elemento y guardarlo en una variable. Parámetros: selectorType (string), selectorValue (string), selectorVariableRef (string, ejemplo: "$elementSelector"), attribute (string, ejemplo: "data-id"), resultVar (string, ejemplo: "elementId").',
         parameters: {
           selectorType: 'css',
           selectorValue: '',
@@ -516,7 +516,7 @@ const nodeCategories: NodeCategory[] = [
   },
   {
     id: 'controlFlow',
-    name: 'Điều khiển Luồng',
+    name: 'Control de Flujo',
     icon: <GitFork className="h-4 w-4" />,
     color: '#8b5cf6',
     bgColor: '#4c1d95',
@@ -526,7 +526,7 @@ const nodeCategories: NodeCategory[] = [
         label: 'If-Else',
         icon: <GitFork className="h-4 w-4" />,
         type: 'conditionNode',
-        description: 'Rẽ nhánh dựa trên điều kiện. Tham số: condition (string, ví dụ: "$myVar > 10"), conditionVariableRef (string, ví dụ: "$conditionValue").',
+        description: 'Ramificar según una condición. Parámetros: condition (string, ejemplo: "$myVar > 10"), conditionVariableRef (string, ejemplo: "$conditionValue").',
         parameters: {
           condition: '',
           conditionVariableRef: ''
@@ -537,7 +537,7 @@ const nodeCategories: NodeCategory[] = [
         label: 'Switch-Case',
         icon: <GitFork className="h-4 w-4" />,
         type: 'conditionNode',
-        description: 'Chuyển luồng dựa trên giá trị. Tham số: variable (string, ví dụ: "status"), variableRef (string, ví dụ: "$statusValue"), cases (array, ví dụ: [{case: "success", action: "proceed"}]).',
+        description: 'Cambiar el flujo según un valor. Parámetros: variable (string, ejemplo: "status"), variableRef (string, ejemplo: "$statusValue"), cases (array, ejemplo: [{case: "success", action: "proceed"}]).',
         parameters: {
           variable: '',
           variableRef: '',
@@ -546,10 +546,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'loop',
-        label: 'Vòng lặp',
+        label: 'Bucle',
         icon: <Repeat className="h-4 w-4" />,
         type: 'loopNode',
-        description: 'Lặp lại hành động, lưu biến đếm. Tham số: times (number, ví dụ: 5), timesVariableRef (string, ví dụ: "$loopCount"), loopVariable (string, ví dụ: "i").',
+        description: 'Repetir una acción, guardar variable de conteo. Parámetros: times (number, ejemplo: 5), timesVariableRef (string, ejemplo: "$loopCount"), loopVariable (string, ejemplo: "i").',
         parameters: {
           times: 5,
           timesVariableRef: '',
@@ -561,7 +561,7 @@ const nodeCategories: NodeCategory[] = [
         label: 'For Each',
         icon: <Repeat className="h-4 w-4" />,
         type: 'loopNode',
-        description: 'Lặp qua mảng, lưu biến phần tử. Tham số: array (string, ví dụ: "myArray"), arrayVariableRef (string, ví dụ: "$myArray"), itemVariable (string, ví dụ: "item").',
+        description: 'Iterar sobre un array, guardar variable de elemento. Parámetros: array (string, ejemplo: "myArray"), arrayVariableRef (string, ejemplo: "$myArray"), itemVariable (string, ejemplo: "item").',
         parameters: {
           array: '',
           arrayVariableRef: '',
@@ -573,7 +573,7 @@ const nodeCategories: NodeCategory[] = [
         label: 'While',
         icon: <Repeat className="h-4 w-4" />,
         type: 'loopNode',
-        description: 'Lặp khi điều kiện đúng. Tham số: condition (string, ví dụ: "$myVar < 10"), conditionVariableRef (string, ví dụ: "$conditionValue").',
+        description: 'Repetir mientras la condición sea verdadera. Parámetros: condition (string, ejemplo: "$myVar < 10"), conditionVariableRef (string, ejemplo: "$conditionValue").',
         parameters: {
           condition: '',
           conditionVariableRef: ''
@@ -584,7 +584,7 @@ const nodeCategories: NodeCategory[] = [
         label: 'Break',
         icon: <X className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Thoát khỏi vòng lặp hiện tại. Không có tham số.',
+        description: 'Salir del bucle actual. No tiene parámetros.',
         parameters: {}
       },
       {
@@ -592,7 +592,7 @@ const nodeCategories: NodeCategory[] = [
         label: 'Continue',
         icon: <ArrowRightLeft className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Bỏ qua lần lặp hiện tại. Không có tham số.',
+        description: 'Omitir la iteración actual. No tiene parámetros.',
         parameters: {}
       },
       {
@@ -600,7 +600,7 @@ const nodeCategories: NodeCategory[] = [
         label: 'Try-Catch',
         icon: <ShieldAlert className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Bắt và xử lý lỗi. Tham số: errorVar (string, ví dụ: "errorMessage").',
+        description: 'Capturar y manejar errores. Parámetros: errorVar (string, ejemplo: "errorMessage").',
         parameters: {
           errorVar: ''
         }
@@ -610,7 +610,7 @@ const nodeCategories: NodeCategory[] = [
         label: 'Return',
         icon: <ArrowRightLeft className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Trả về giá trị và kết thúc. Tham số: value (any, ví dụ: "result"), variableRef (string, ví dụ: "$returnValue").',
+        description: 'Devolver un valor y terminar. Parámetros: value (any, ejemplo: "result"), variableRef (string, ejemplo: "$returnValue").',
         parameters: {
           value: '',
           variableRef: ''
@@ -618,10 +618,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'retry',
-        label: 'Retry',
+        label: 'Reintentar',
         icon: <Repeat className="h-4 w-4" />,
         type: 'actionNode',
-        description: 'Thử lại hành động khi lỗi. Tham số: times (number, ví dụ: 3), timesVariableRef (string, ví dụ: "$retryCount"), delay (ms).',
+        description: 'Reintentar una acción cuando hay error. Parámetros: times (number, ejemplo: 3), timesVariableRef (string, ejemplo: "$retryCount"), delay (ms).',
         parameters: {
           times: 3,
           timesVariableRef: '',
@@ -632,17 +632,17 @@ const nodeCategories: NodeCategory[] = [
   },
   {
     id: 'data',
-    name: 'Dữ liệu',
+    name: 'Datos',
     icon: <Database className="h-4 w-4" />,
     color: '#10b981',
     bgColor: '#064e3b',
     nodes: [
       {
         id: 'variable',
-        label: 'Biến',
+        label: 'Variable',
         icon: <Database className="h-4 w-4" />,
         type: 'dataNode',
-        description: 'Khai báo hoặc cập nhật biến. Tham số: name (string, ví dụ: "myVar"), value (any, ví dụ: "value"), valueVariableRef (string, ví dụ: "$inputValue").',
+        description: 'Declarar o actualizar una variable. Parámetros: name (string, ejemplo: "myVar"), value (any, ejemplo: "value"), valueVariableRef (string, ejemplo: "$inputValue").',
         parameters: {
           name: '',
           value: '',
@@ -651,10 +651,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'array',
-        label: 'Mảng',
+        label: 'Array',
         icon: <Database className="h-4 w-4" />,
         type: 'dataNode',
-        description: 'Tạo hoặc cập nhật mảng. Tham số: name (string, ví dụ: "myArray"), value (array, ví dụ: []), valueVariableRef (string, ví dụ: "$inputArray").',
+        description: 'Crear o actualizar un array. Parámetros: name (string, ejemplo: "myArray"), value (array, ejemplo: []), valueVariableRef (string, ejemplo: "$inputArray").',
         parameters: {
           name: '',
           value: [],
@@ -663,10 +663,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'object',
-        label: 'Đối tượng',
+        label: 'Objeto',
         icon: <Database className="h-4 w-4" />,
         type: 'dataNode',
-        description: 'Tạo hoặc cập nhật đối tượng. Tham số: name (string, ví dụ: "myObject"), value (object, ví dụ: {}), valueVariableRef (string, ví dụ: "$inputObject").',
+        description: 'Crear o actualizar un objeto. Parámetros: name (string, ejemplo: "myObject"), value (object, ejemplo: {}), valueVariableRef (string, ejemplo: "$inputObject").',
         parameters: {
           name: '',
           value: {},
@@ -675,10 +675,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'math',
-        label: 'Toán học',
+        label: 'Matemáticas',
         icon: <Plus className="h-4 w-4" />,
         type: 'dataNode',
-        description: 'Thực hiện phép tính. Tham số: operation (string, ví dụ: "add"), operands (array, ví dụ: [1, 2]), operandsVariableRef (string, ví dụ: "$inputOperands"), resultVar (string, ví dụ: "sum").',
+        description: 'Realizar operaciones matemáticas. Parámetros: operation (string, ejemplo: "add"), operands (array, ejemplo: [1, 2]), operandsVariableRef (string, ejemplo: "$inputOperands"), resultVar (string, ejemplo: "sum").',
         parameters: {
           operation: 'add',
           operands: [],
@@ -688,10 +688,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'string',
-        label: 'Chuỗi',
+        label: 'Cadena',
         icon: <Type className="h-4 w-4" />,
         type: 'dataNode',
-        description: 'Thao tác với chuỗi. Tham số: operation (string, ví dụ: "concat"), strings (array, ví dụ: ["Hello", "World"]), stringsVariableRef (string, ví dụ: "$inputStrings"), resultVar (string, ví dụ: "resultString").',
+        description: 'Operar con cadenas de texto. Parámetros: operation (string, ejemplo: "concat"), strings (array, ejemplo: ["Hello", "World"]), stringsVariableRef (string, ejemplo: "$inputStrings"), resultVar (string, ejemplo: "resultString").',
         parameters: {
           operation: 'concat',
           strings: [],
@@ -701,10 +701,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'date',
-        label: 'Ngày',
+        label: 'Fecha',
         icon: <Clock className="h-4 w-4" />,
         type: 'dataNode',
-        description: 'Thao tác với ngày tháng. Tham số: operation (string, ví dụ: "now"), resultVar (string, ví dụ: "currentDate").',
+        description: 'Operar con fechas. Parámetros: operation (string, ejemplo: "now"), resultVar (string, ejemplo: "currentDate").',
         parameters: {
           operation: 'now',
           resultVar: ''
@@ -715,7 +715,7 @@ const nodeCategories: NodeCategory[] = [
         label: 'JSON',
         icon: <ClipboardList className="h-4 w-4" />,
         type: 'dataNode',
-        description: 'Thao tác với JSON. Tham số: operation (string, ví dụ: "parse"), data (string, ví dụ: "{\"key\": \"value\"}"), dataVariableRef (string, ví dụ: "$inputJson"), resultVar (string, ví dụ: "parsedJson").',
+        description: 'Operar con JSON. Parámetros: operation (string, ejemplo: "parse"), data (string, ejemplo: "{\"key\": \"value\"}"), dataVariableRef (string, ejemplo: "$inputJson"), resultVar (string, ejemplo: "parsedJson").',
         parameters: {
           operation: 'parse',
           data: '',
@@ -728,7 +728,7 @@ const nodeCategories: NodeCategory[] = [
         label: 'RegExp',
         icon: <Search className="h-4 w-4" />,
         type: 'dataNode',
-        description: 'Tìm kiếm với biểu thức chính quy. Tham số: pattern (string, ví dụ: "\\d+"), text (string), textVariableRef (string, ví dụ: "$inputText"), flags (string, ví dụ: "g"), resultVar (string, ví dụ: "matches").',
+        description: 'Buscar con expresión regular. Parámetros: pattern (string, ejemplo: "\\d+"), text (string), textVariableRef (string, ejemplo: "$inputText"), flags (string, ejemplo: "g"), resultVar (string, ejemplo: "matches").',
         parameters: {
           pattern: '',
           text: '',
@@ -739,10 +739,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'randomize',
-        label: 'Ngẫu nhiên',
+        label: 'Aleatorio',
         icon: <ArrowRightLeft className="h-4 w-4" />,
         type: 'dataNode',
-        description: 'Tạo giá trị ngẫu nhiên. Tham số: type (string, ví dụ: "number"), min (number), minVariableRef (string, ví dụ: "$minValue"), max (number), maxVariableRef (string, ví dụ: "$maxValue"), resultVar (string, ví dụ: "randomValue").',
+        description: 'Generar un valor aleatorio. Parámetros: type (string, ejemplo: "number"), min (number), minVariableRef (string, ejemplo: "$minValue"), max (number), maxVariableRef (string, ejemplo: "$maxValue"), resultVar (string, ejemplo: "randomValue").',
         parameters: {
           type: 'number',
           min: 1,
@@ -754,10 +754,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'sort',
-        label: 'Sắp xếp',
+        label: 'Ordenar',
         icon: <ArrowUp className="h-4 w-4" />,
         type: 'dataNode',
-        description: 'Sắp xếp mảng. Tham số: array (string, ví dụ: "myArray"), arrayVariableRef (string, ví dụ: "$inputArray"), order (string, ví dụ: "ascending"), resultVar (string, ví dụ: "sortedArray").',
+        description: 'Ordenar un array. Parámetros: array (string, ejemplo: "myArray"), arrayVariableRef (string, ejemplo: "$inputArray"), order (string, ejemplo: "ascending"), resultVar (string, ejemplo: "sortedArray").',
         parameters: {
           array: '',
           arrayVariableRef: '',
@@ -767,10 +767,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'filter',
-        label: 'Lọc',
+        label: 'Filtrar',
         icon: <ListFilter className="h-4 w-4" />,
         type: 'dataNode',
-        description: 'Lọc mảng. Tham số: array (string, ví dụ: "myArray"), arrayVariableRef (string, ví dụ: "$inputArray"), condition (string, ví dụ: "item > 10"), conditionVariableRef (string, ví dụ: "$filterCondition"), resultVar (string, ví dụ: "filteredArray").',
+        description: 'Filtrar un array. Parámetros: array (string, ejemplo: "myArray"), arrayVariableRef (string, ejemplo: "$inputArray"), condition (string, ejemplo: "item > 10"), conditionVariableRef (string, ejemplo: "$filterCondition"), resultVar (string, ejemplo: "filteredArray").',
         parameters: {
           array: '',
           arrayVariableRef: '',
@@ -784,7 +784,7 @@ const nodeCategories: NodeCategory[] = [
         label: 'Map',
         icon: <GitMerge className="h-4 w-4" />,
         type: 'dataNode',
-        description: 'Áp dụng hàm cho mảng. Tham số: array (string, ví dụ: "myArray"), arrayVariableRef (string, ví dụ: "$inputArray"), operation (string, ví dụ: "item * 2"), operationVariableRef (string, ví dụ: "$mapOperation"), resultVar (string, ví dụ: "mappedArray").',
+        description: 'Aplicar función a un array. Parámetros: array (string, ejemplo: "myArray"), arrayVariableRef (string, ejemplo: "$inputArray"), operation (string, ejemplo: "item * 2"), operationVariableRef (string, ejemplo: "$mapOperation"), resultVar (string, ejemplo: "mappedArray").',
         parameters: {
           array: '',
           arrayVariableRef: '',
@@ -797,17 +797,17 @@ const nodeCategories: NodeCategory[] = [
   },
   {
     id: 'wait',
-    name: 'Chờ đợi',
+    name: 'Esperar',
     icon: <Clock className="h-4 w-4" />,
     color: '#84cc16',
     bgColor: '#365314',
     nodes: [
       {
         id: 'delay',
-        label: 'Chờ',
+        label: 'Esperar',
         icon: <Clock className="h-4 w-4" />,
         type: 'waitNode',
-        description: 'Tạm dừng thực thi. Tham số: duration (ms, ví dụ: 1000), durationVariableRef (string, ví dụ: "$waitTime").',
+        description: 'Pausar la ejecución. Parámetros: duration (ms, ejemplo: 1000), durationVariableRef (string, ejemplo: "$waitTime").',
         parameters: {
           duration: 1000,
           durationVariableRef: ''
@@ -815,10 +815,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'waitForPageLoad',
-        label: 'Chờ trang tải',
+        label: 'Esperar carga de página',
         icon: <Loader className="h-4 w-4" />,
         type: 'waitNode',
-        description: 'Chờ trang tải hoàn tất. Tham số: timeout (ms, ví dụ: 30000), timeoutVariableRef (string, ví dụ: "$loadTimeout").',
+        description: 'Esperar a que la página termine de cargar. Parámetros: timeout (ms, ejemplo: 30000), timeoutVariableRef (string, ejemplo: "$loadTimeout").',
         parameters: {
           timeout: 30000,
           timeoutVariableRef: ''
@@ -826,10 +826,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'waitForSelector',
-        label: 'Chờ phần tử',
+        label: 'Esperar elemento',
         icon: <Loader className="h-4 w-4" />,
         type: 'waitNode',
-        description: 'Chờ phần tử xuất hiện. Tham số: selectorType (string, ví dụ: "css"), selectorValue (string, ví dụ: "#myElement"), selectorVariableRef (string, ví dụ: "$elementSelector"), timeout (ms), timeoutVariableRef (string, ví dụ: "$waitTimeout").',
+        description: 'Esperar a que aparezca un elemento. Parámetros: selectorType (string, ejemplo: "css"), selectorValue (string, ejemplo: "#myElement"), selectorVariableRef (string, ejemplo: "$elementSelector"), timeout (ms), timeoutVariableRef (string, ejemplo: "$waitTimeout").',
         parameters: {
           selectorType: 'css',
           selectorValue: '',
@@ -840,10 +840,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'waitForXPath',
-        label: 'Chờ XPath',
+        label: 'Esperar XPath',
         icon: <Loader className="h-4 w-4" />,
         type: 'waitNode',
-        description: 'Chờ phần tử xác định bằng XPath. Tham số: selectorType, selectorValue, selectorVariableRef, timeout, timeoutVariableRef',
+        description: 'Esperar un elemento identificado por XPath. Parámetros: selectorType, selectorValue, selectorVariableRef, timeout, timeoutVariableRef',
         parameters: {
           selectorType: 'xpath',
           selectorValue: '',
@@ -854,10 +854,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'waitConnections',
-        label: 'Chờ kết nối',
+        label: 'Esperar conexión',
         icon: <Loader className="h-4 w-4" />,
         type: 'waitNode',
-        description: 'Chờ sự kiện hoặc kết nối. Tham số: event, eventVariableRef, timeout, timeoutVariableRef',
+        description: 'Esperar un evento o conexión. Parámetros: event, eventVariableRef, timeout, timeoutVariableRef',
         parameters: {
           event: '',
           eventVariableRef: '',
@@ -869,17 +869,17 @@ const nodeCategories: NodeCategory[] = [
   },
   {
     id: 'onlineServices',
-    name: 'Dịch vụ Online',
+    name: 'Servicios Online',
     icon: <Network className="h-4 w-4" />,
     color: '#06b6d4',
     bgColor: '#164e63',
     nodes: [
       {
         id: 'mailSend',
-        label: 'Gửi Email',
+        label: 'Enviar Email',
         icon: <Mail className="h-4 w-4" />,
         type: 'serviceNode',
-        description: 'Gửi email. Tham số: to (string), toVariableRef (string, ví dụ: "$recipient"), subject (string), subjectVariableRef (string, ví dụ: "$emailSubject"), body (string), bodyVariableRef (string, ví dụ: "$emailContent"), minWait (ms), maxWait (ms).',
+        description: 'Enviar un correo electrónico. Parámetros: to (string), toVariableRef (string, ejemplo: "$recipient"), subject (string), subjectVariableRef (string, ejemplo: "$emailSubject"), body (string), bodyVariableRef (string, ejemplo: "$emailContent"), minWait (ms), maxWait (ms).',
         parameters: {
           to: '',
           toVariableRef: '',
@@ -893,10 +893,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'sms',
-        label: 'Gửi SMS',
+        label: 'Enviar SMS',
         icon: <Mail className="h-4 w-4" />,
         type: 'serviceNode',
-        description: 'Gửi SMS. Tham số: to (string), toVariableRef (string, ví dụ: "$phoneNumber"), message (string), messageVariableRef (string, ví dụ: "$smsContent"), minWait (ms), maxWait (ms).',
+        description: 'Enviar un SMS. Parámetros: to (string), toVariableRef (string, ejemplo: "$phoneNumber"), message (string), messageVariableRef (string, ejemplo: "$smsContent"), minWait (ms), maxWait (ms).',
         parameters: {
           to: '',
           toVariableRef: '',
@@ -908,10 +908,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'apiCall',
-        label: 'Gọi API',
+        label: 'Llamar API',
         icon: <Network className="h-4 w-4" />,
         type: 'serviceNode',
-        description: 'Gọi API RESTful. Tham số: url (string), urlVariableRef (string, ví dụ: "$apiUrl"), method (string), methodVariableRef (string, ví dụ: "$apiMethod"), headers (object), headersVariableRef (string, ví dụ: "$apiHeaders"), body (object), bodyVariableRef (string, ví dụ: "$apiPayload"), resultVar (string, ví dụ: "apiResult"), minWait (ms), maxWait (ms).',
+        description: 'Llamar a una API RESTful. Parámetros: url (string), urlVariableRef (string, ejemplo: "$apiUrl"), method (string), methodVariableRef (string, ejemplo: "$apiMethod"), headers (object), headersVariableRef (string, ejemplo: "$apiHeaders"), body (object), bodyVariableRef (string, ejemplo: "$apiPayload"), resultVar (string, ejemplo: "apiResult"), minWait (ms), maxWait (ms).',
         parameters: {
           url: '',
           urlVariableRef: '',
@@ -931,7 +931,7 @@ const nodeCategories: NodeCategory[] = [
         label: 'Webhook',
         icon: <Network className="h-4 w-4" />,
         type: 'serviceNode',
-        description: 'Gửi dữ liệu đến webhook. Tham số: url (string), urlVariableRef (string, ví dụ: "$webhookUrl"), payload (object), payloadVariableRef (string, ví dụ: "$webhookPayload"), resultVar (string, ví dụ: "webhookResult"), minWait (ms), maxWait (ms).',
+        description: 'Enviar datos a un webhook. Parámetros: url (string), urlVariableRef (string, ejemplo: "$webhookUrl"), payload (object), payloadVariableRef (string, ejemplo: "$webhookPayload"), resultVar (string, ejemplo: "webhookResult"), minWait (ms), maxWait (ms).',
         parameters: {
           url: '',
           urlVariableRef: '',
@@ -947,7 +947,7 @@ const nodeCategories: NodeCategory[] = [
         label: 'ChatGPT',
         icon: <MessageCircle className="h-4 w-4" />,
         type: 'serviceNode',
-        description: 'Tương tác với ChatGPT API. Tham số: prompt (string, ví dụ: "Hello, how are you?"), promptVariableRef (string, ví dụ: "$chatPrompt"), model (string, ví dụ: "gpt-3.5-turbo"), resultVar (string, ví dụ: "chatResponse"), minWait (ms), maxWait (ms).',
+        description: 'Interactuar con la API de ChatGPT. Parámetros: prompt (string, ejemplo: "Hello, how are you?"), promptVariableRef (string, ejemplo: "$chatPrompt"), model (string, ejemplo: "gpt-3.5-turbo"), resultVar (string, ejemplo: "chatResponse"), minWait (ms), maxWait (ms).',
         parameters: {
           prompt: '',
           promptVariableRef: '',
@@ -959,10 +959,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'translate',
-        label: 'Dịch',
+        label: 'Traducir',
         icon: <Globe className="h-4 w-4" />,
         type: 'serviceNode',
-        description: 'Dịch văn bản. Tham số: text (string), textVariableRef (string, ví dụ: "$textToTranslate"), sourceLang (string, ví dụ: "auto"), targetLang (string, ví dụ: "en"), resultVar (string, ví dụ: "translatedText"), minWait (ms), maxWait (ms).',
+        description: 'Traducir texto. Parámetros: text (string), textVariableRef (string, ejemplo: "$textToTranslate"), sourceLang (string, ejemplo: "auto"), targetLang (string, ejemplo: "en"), resultVar (string, ejemplo: "translatedText"), minWait (ms), maxWait (ms).',
         parameters: {
           text: '',
           textVariableRef: '',
@@ -975,10 +975,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'notification',
-        label: 'Thông báo',
+        label: 'Notificación',
         icon: <BellRing className="h-4 w-4" />,
         type: 'serviceNode',
-        description: 'Gửi thông báo qua kênh. Tham số: channel, channelVariableRef, message, messageVariableRef, minWait, maxWait',
+        description: 'Enviar notificación a través de un canal. Parámetros: channel, channelVariableRef, message, messageVariableRef, minWait, maxWait',
         parameters: {
           channel: 'telegram',
           channelVariableRef: '',
@@ -990,10 +990,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'calendar',
-        label: 'Lịch',
+        label: 'Calendario',
         icon: <CalendarDays className="h-4 w-4" />,
         type: 'serviceNode',
-        description: 'Thao tác với lịch. Tham số: action, actionVariableRef, event, eventVariableRef, resultVar, minWait, maxWait',
+        description: 'Operar con calendario. Parámetros: action, actionVariableRef, event, eventVariableRef, resultVar, minWait, maxWait',
         parameters: {
           action: 'add',
           actionVariableRef: '',
@@ -1006,10 +1006,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'database',
-        label: 'Cơ sở dữ liệu',
+        label: 'Base de datos',
         icon: <Database className="h-4 w-4" />,
         type: 'serviceNode',
-        description: 'Tương tác với cơ sở dữ liệu. Tham số: operation, operationVariableRef, table, tableVariableRef, data, dataVariableRef, resultVar, minWait, maxWait',
+        description: 'Interactuar con base de datos. Parámetros: operation, operationVariableRef, table, tableVariableRef, data, dataVariableRef, resultVar, minWait, maxWait',
         parameters: {
           operation: 'select',
           operationVariableRef: '',
@@ -1024,10 +1024,10 @@ const nodeCategories: NodeCategory[] = [
       },
       {
         id: 'storage',
-        label: 'Lưu trữ Cloud',
+        label: 'Almacenamiento en la Nube',
         icon: <Save className="h-4 w-4" />,
         type: 'serviceNode',
-        description: 'Tương tác với lưu trữ đám mây. Tham số: service, serviceVariableRef, operation, operationVariableRef, path, pathVariableRef, data, dataVariableRef, resultVar, minWait, maxWait',
+        description: 'Interactuar con almacenamiento en la nube. Parámetros: service, serviceVariableRef, operation, operationVariableRef, path, pathVariableRef, data, dataVariableRef, resultVar, minWait, maxWait',
         parameters: {
           service: 'dropbox',
           serviceVariableRef: '',
@@ -1100,7 +1100,7 @@ function NodePanel() {
           <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
           <input
             type="text"
-            placeholder="Tìm kiếm node..."
+            placeholder="Buscar nodo..."
             className="w-full pl-8 pr-2 py-1 text-sm border border-gray-300 rounded"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}

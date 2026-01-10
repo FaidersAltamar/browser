@@ -22,32 +22,32 @@ import { useToast } from "../hooks/use-toast";
 
 // Login schema
 const loginSchema = z.object({
-  username: z.string().min(2, "Tên đăng nhập phải có ít nhất 2 ký tự"),
-  password: z.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
+  username: z.string().min(2, "El nombre de usuario debe tener al menos 2 caracteres"),
+  password: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
   rememberMe: z.boolean().optional(),
 });
 
 // Registration schema
 const registerSchema = z
   .object({
-    fullName: z.string().min(2, "Tên phải có ít nhất 2 ký tự"),
-    email: z.string().email("Email không hợp lệ"),
-    contact: z.string().min(5, "Thông tin liên hệ phải có ít nhất 5 ký tự"),
-    password: z.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
+    fullName: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
+    email: z.string().email("Email no válido"),
+    contact: z.string().min(5, "La información de contacto debe tener al menos 5 caracteres"),
+    password: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
     confirmPassword: z.string(),
     referralCode: z.string().optional(),
     agreeTerms: z.boolean().refine((val) => val === true, {
-      message: "Bạn phải đồng ý với các điều khoản dịch vụ",
+      message: "Debes aceptar los términos de servicio",
     }),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Mật khẩu xác nhận không khớp",
+    message: "Las contraseñas no coinciden",
     path: ["confirmPassword"],
   });
 
 // Forgot password schema
 const forgotPasswordSchema = z.object({
-  username: z.string().min(2, "Tên đăng nhập phải có ít nhất 2 ký tự"),
+  username: z.string().min(2, "El nombre de usuario debe tener al menos 2 caracteres"),
 });
 
 export default function AuthPage() {
@@ -119,9 +119,9 @@ export default function AuthPage() {
         username: data.username,
         password: data.password,
       });
-      // Đăng nhập thành công sẽ được xử lý bởi useEffect
+      // El inicio de sesión exitoso será manejado por useEffect
     } catch (error) {
-      // Lỗi đã được xử lý bởi hook useAuth
+      // El error ya fue manejado por el hook useAuth
       console.error("Login error:", error);
     } finally {
       setIsSubmitting(false);
@@ -140,9 +140,9 @@ export default function AuthPage() {
         email: data.email,
         role: "user",
       });
-      // Đăng ký thành công sẽ được xử lý bởi useEffect
+      // El registro exitoso será manejado por useEffect
     } catch (error) {
-      // Lỗi đã được xử lý bởi hook useAuth
+      // El error ya fue manejado por el hook useAuth
       console.error("Registration error:", error);
     } finally {
       setIsSubmitting(false);
@@ -157,12 +157,12 @@ export default function AuthPage() {
       setIsSubmitting(true);
       await forgotPassword(data.username);
       toast({
-        title: "Yêu cầu đã được gửi",
-        description: "Vui lòng kiểm tra email của bạn để đặt lại mật khẩu",
+        title: "Solicitud enviada",
+        description: "Por favor, revisa tu correo electrónico para restablecer la contraseña",
       });
       switchForm("login");
     } catch (error) {
-      // Lỗi đã được xử lý bởi hook useAuth
+      // El error ya fue manejado por el hook useAuth
       console.error("Forgot password error:", error);
     } finally {
       setIsSubmitting(false);
@@ -182,9 +182,9 @@ export default function AuthPage() {
         <>
           <div className="text-center mb-8">
             <Lock className="h-14 w-14 mx-auto text-blue-600" />
-            <h3 className="text-2xl font-bold text-blue-600 mt-4">Đăng nhập</h3>
+            <h3 className="text-2xl font-bold text-blue-600 mt-4">Iniciar sesión</h3>
             <p className="text-sm text-gray-600 mt-2">
-              Nhập thông tin đăng nhập để truy cập tài khoản của bạn
+              Ingresa tu información para acceder a tu cuenta
             </p>
           </div>
 
@@ -220,13 +220,13 @@ export default function AuthPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700">Mật khẩu</FormLabel>
+                    <FormLabel className="text-gray-700">Contraseña</FormLabel>
                     <FormControl>
                       <div className="relative">
                         <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                         <Input
                           type={showPassword ? "text" : "password"}
-                          placeholder="Nhập mật khẩu"
+                          placeholder="Ingresa tu contraseña"
                           className="pl-10 pr-10 border-gray-300 focus:border-primary"
                           {...field}
                         />
@@ -263,7 +263,7 @@ export default function AuthPage() {
                         htmlFor="remember-me"
                         className="text-sm font-medium text-gray-700 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       >
-                        Ghi nhớ đăng nhập
+                        Recordar sesión
                       </label>
                     </div>
                   )}
@@ -277,7 +277,7 @@ export default function AuthPage() {
                       switchForm("forgotPassword");
                     }}
                   >
-                    Quên mật khẩu?
+                    ¿Olvidaste tu contraseña?
                   </a>
                 </div>
               </div>
@@ -286,13 +286,13 @@ export default function AuthPage() {
                 className="w-full mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium shadow-md"
                 disabled={isSubmitting || authLoading}
               >
-                {isSubmitting ? "Đang đăng nhập..." : "Đăng nhập"}
+                {isSubmitting ? "Iniciando sesión..." : "Iniciar sesión"}
               </Button>
             </form>
           </Form>
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
-              Bạn chưa có tài khoản?{" "}
+              ¿No tienes una cuenta?{" "}
               <a
                 href="#"
                 className="font-medium text-primary hover:text-primary/90 transition-colors"
@@ -301,7 +301,7 @@ export default function AuthPage() {
                   switchForm("register");
                 }}
               >
-                Đăng ký
+                Regístrate
               </a>
             </p>
           </div>
@@ -312,9 +312,9 @@ export default function AuthPage() {
         <>
           <div className="text-center mb-6">
             <User className="h-14 w-14 mx-auto text-blue-600" />
-            <h3 className="text-2xl font-bold text-blue-600 mt-4">Đăng ký</h3>
+            <h3 className="text-2xl font-bold text-blue-600 mt-4">Registro</h3>
             <p className="text-sm text-gray-600 mt-2">
-              Tạo tài khoản để quản lý dấu vân tay trình duyệt
+              Crea una cuenta para gestionar huellas digitales del navegador
             </p>
           </div>
 
@@ -329,13 +329,13 @@ export default function AuthPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-gray-700 flex items-center">
-                      Tên <span className="text-red-500 ml-1">*</span>
+                      Nombre <span className="text-red-500 ml-1">*</span>
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                         <Input
-                          placeholder="Nhập tên của bạn"
+                          placeholder="Ingresa tu nombre"
                           className="pl-10 border-gray-300 focus:border-primary"
                           {...field}
                         />
@@ -358,7 +358,7 @@ export default function AuthPage() {
                       <div className="relative">
                         <AtSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                         <Input
-                          placeholder="Nhập địa chỉ email của bạn"
+                          placeholder="Ingresa tu dirección de email"
                           className="pl-10 border-gray-300 focus:border-primary"
                           {...field}
                         />
@@ -375,14 +375,14 @@ export default function AuthPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-gray-700 flex items-center">
-                      Liên hệ hỗ trợ{" "}
+                      Contacto de soporte{" "}
                       <span className="text-red-500 ml-1">*</span>
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                         <Input
-                          placeholder="Nhập gmail, số điện thoại, Facebook, telegram..."
+                          placeholder="Ingresa gmail, teléfono, Facebook, telegram..."
                           className="pl-10 border-gray-300 focus:border-primary"
                           {...field}
                         />
@@ -399,14 +399,14 @@ export default function AuthPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-gray-700 flex items-center">
-                      Mật khẩu <span className="text-red-500 ml-1">*</span>
+                      Contraseña <span className="text-red-500 ml-1">*</span>
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                         <Input
                           type={showPassword ? "text" : "password"}
-                          placeholder="Nhập mật khẩu của bạn"
+                          placeholder="Ingresa tu contraseña"
                           className="pl-10 pr-10 border-gray-300 focus:border-primary"
                           {...field}
                         />
@@ -434,7 +434,7 @@ export default function AuthPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-gray-700 flex items-center">
-                      Xác nhận mật khẩu{" "}
+                      Confirmar contraseña{" "}
                       <span className="text-red-500 ml-1">*</span>
                     </FormLabel>
                     <FormControl>
@@ -442,7 +442,7 @@ export default function AuthPage() {
                         <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                         <Input
                           type={showConfirmPassword ? "text" : "password"}
-                          placeholder="Nhập lại mật khẩu của bạn"
+                          placeholder="Vuelve a ingresar tu contraseña"
                           className="pl-10 pr-10 border-gray-300 focus:border-primary"
                           {...field}
                         />
@@ -470,11 +470,11 @@ export default function AuthPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-gray-700">
-                      Mã giới thiệu (Tuỳ chọn)
+                      Código de referido (Opcional)
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Nhập mã giới thiệu"
+                        placeholder="Ingresa el código de referido"
                         className="border-gray-300 focus:border-primary"
                         {...field}
                       />
@@ -498,13 +498,13 @@ export default function AuthPage() {
                     </FormControl>
                     <div className="space-y-1 leading-none">
                       <FormLabel className="text-sm text-gray-700">
-                        Tôi đồng ý với{" "}
+                        Acepto los{" "}
                         <a href="#" className="text-primary hover:underline">
-                          Điều khoản dịch vụ
+                          Términos de servicio
                         </a>{" "}
-                        và{" "}
+                        y la{" "}
                         <a href="#" className="text-primary hover:underline">
-                          Chính sách bảo mật
+                          Política de privacidad
                         </a>
                       </FormLabel>
                       <FormMessage className="text-xs" />
@@ -518,13 +518,13 @@ export default function AuthPage() {
                 className="w-full mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium shadow-md"
                 disabled={isSubmitting || authLoading}
               >
-                {isSubmitting ? "Đang xử lý..." : "Đăng ký tài khoản"}
+                {isSubmitting ? "Procesando..." : "Crear cuenta"}
               </Button>
             </form>
           </Form>
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
-              Đã có tài khoản?{" "}
+              ¿Ya tienes una cuenta?{" "}
               <a
                 href="#"
                 className="font-medium text-primary hover:text-primary/90 transition-colors"
@@ -533,7 +533,7 @@ export default function AuthPage() {
                   switchForm("login");
                 }}
               >
-                Đăng nhập
+                Iniciar sesión
               </a>
             </p>
           </div>
@@ -545,10 +545,10 @@ export default function AuthPage() {
           <div className="text-center mb-8">
             <Lock className="h-14 w-14 mx-auto text-blue-600" />
             <h3 className="text-2xl font-bold text-blue-600 mt-4">
-              Quên mật khẩu
+              Olvidé mi contraseña
             </h3>
             <p className="text-sm text-gray-600 mt-2">
-              Nhập tên đăng nhập của bạn để nhận liên kết đặt lại mật khẩu
+              Ingresa tu nombre de usuario para recibir el enlace de restablecimiento
             </p>
           </div>
 
@@ -563,13 +563,13 @@ export default function AuthPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-gray-700">
-                      Tên đăng nhập
+                      Nombre de usuario
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                         <Input
-                          placeholder="Nhập tên đăng nhập của bạn"
+                          placeholder="Ingresa tu nombre de usuario"
                           className="pl-10 border-gray-300 focus:border-primary"
                           {...field}
                         />
@@ -584,13 +584,13 @@ export default function AuthPage() {
                 className="w-full mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium shadow-md"
                 disabled={isSubmitting || authLoading}
               >
-                {isSubmitting ? "Đang xử lý..." : "Gửi liên kết đặt lại"}
+                {isSubmitting ? "Procesando..." : "Enviar enlace de restablecimiento"}
               </Button>
             </form>
           </Form>
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
-              Bạn nhớ mật khẩu?{" "}
+              ¿Recuerdas tu contraseña?{" "}
               <a
                 href="#"
                 className="font-medium text-primary hover:text-primary/90 transition-colors"
@@ -599,7 +599,7 @@ export default function AuthPage() {
                   switchForm("login");
                 }}
               >
-                Quay lại đăng nhập
+                Volver a iniciar sesión
               </a>
             </p>
           </div>

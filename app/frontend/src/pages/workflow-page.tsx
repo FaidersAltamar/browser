@@ -19,7 +19,7 @@ interface Workflow {
   description?: string;
   createdAt: string;
   updatedAt: string;
-  isRunning?: boolean; // Tạm thời vẫn giữ, sẽ được xử lý sau
+  isRunning?: boolean; // Temporalmente mantenido, se manejará después
 }
 
 export default function WorkflowPage() {
@@ -28,7 +28,7 @@ export default function WorkflowPage() {
     workflows, // CHANGED: Lấy workflows từ hook
     isLoadingWorkflows,
     duplicateWorkflow,
-    deleteWorkflow, // ADDED: Lấy hàm deleteWorkflow
+    deleteWorkflow, // ADDED: Obtener función deleteWorkflow
   } = useWorkflow();
 
   const {
@@ -52,39 +52,39 @@ export default function WorkflowPage() {
   };
 
   const handleEditWorkflow = (workflowId: string) => {
-    // Tìm đối tượng workflow đầy đủ trong danh sách dựa trên ID
+    // Buscar objeto workflow completo en la lista basado en ID
     const workflowToEdit = workflows.find(wf => wf.id === workflowId);
 
     if (workflowToEdit) {
-      setCurrentWorkflow(workflowToEdit); // Lưu toàn bộ đối tượng vào state
+      setCurrentWorkflow(workflowToEdit); // Guardar objeto completo en el estado
       setCurrentView(WorkflowView.EDITOR);
     } else {
-      // Xử lý trường hợp không tìm thấy workflow (dù hiếm khi xảy ra)
+      // Manejar caso cuando no se encuentra el workflow (aunque es raro)
       console.error("Could not find the workflow to edit with ID:", workflowId);
     }
   };
 
-  // Handler chạy workflow
+  // Handler para ejecutar workflow
   const handleRunWorkflow = (workflow: any) => {
     setSelectedWorkflow(workflow);
     setIsRunDialogOpen(true);
   };
 
-  // Handler xóa workflow
+  // Handler para eliminar workflow
   const handleDeleteWorkflow = (workflowId: string) => {
-    if (window.confirm('Are you sure you want to delete this workflow?')) {
+    if (window.confirm('¿Estás seguro de que quieres eliminar este workflow?')) {
       deleteWorkflow(workflowId);
     }
   };
 
   const handleDuplicateWorkflow = (workflowId: string) => {
-    // Bạn có thể thêm một cửa sổ xác nhận ở đây nếu muốn
-    if (window.confirm('Do you want to create a copy of this workflow?')) {
+    // Puedes agregar una ventana de confirmación aquí si quieres
+    if (window.confirm('¿Quieres crear una copia de este workflow?')) {
       duplicateWorkflow(workflowId);
     }
   };
 
-  // Handler quay lại danh sách
+  // Handler para volver a la lista
   const handleBackToList = () => {
     setCurrentView(WorkflowView.LIST);
     setCurrentWorkflow(null);
@@ -108,9 +108,9 @@ export default function WorkflowPage() {
       return;
     }
 
-    // Phân loại payload và gọi đúng hàm mutation từ useProfile
+    // Clasificar payload y llamar la función mutation correcta desde useProfile
     if (payload.mode === 'profiles') {
-      // Chạy trên từng profile một
+      // Ejecutar en cada perfil individualmente
       payload.profileIds.forEach(profileId => {
         launchProfileWithWorkflow({
           profileId: profileId,
@@ -118,7 +118,7 @@ export default function WorkflowPage() {
         });
       });
     } else if (payload.mode === 'group') {
-      // Chạy theo group
+      // Ejecutar por grupo
       launchGroupWithWorkflow({
         groupId: payload.groupId,
         workflowId: selectedWorkflow.id,
@@ -126,11 +126,11 @@ export default function WorkflowPage() {
       });
     }
 
-    // Đóng dialog sau khi đã gọi mutation
+    // Cerrar diálogo después de llamar la mutation
     setIsRunDialogOpen(false);
   };
 
-  // Hiển thị loading indicator khi đang tải dữ liệu
+  // Mostrar indicador de carga cuando se están cargando los datos
   if (isLoadingWorkflows) {
     return <div className="p-6">Loading workflows...</div>;
   }
@@ -139,13 +139,13 @@ export default function WorkflowPage() {
     <div className="h-screen bg-white text-gray-800">
       {currentView === WorkflowView.LIST ? (
         <WorkflowList
-          workflows={workflows} // CHANGED: Truyền workflows thật
+          workflows={workflows} // CHANGED: Pasar workflows reales
           onCreateNew={handleCreateWorkflow}
           onStopWorkflow={handleStopWorkflow}
           onEdit={handleEditWorkflow}
           onRunWorkflow={handleRunWorkflow}
           onDelete={handleDeleteWorkflow}
-          onDuplicate={handleDuplicateWorkflow} // ADDED: Truyền hàm delete
+          onDuplicate={handleDuplicateWorkflow} // ADDED: Pasar función delete
         />
       ) : (
         <ReactFlowProvider>

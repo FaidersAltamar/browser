@@ -52,26 +52,33 @@ export class LaunchController {
   // Embedded handlers that call business logic directly
   private static async handleLaunchProfile(data: any, authenticatedUser: AuthenticatedUser | null): Promise<any> {
     try {
+      console.log("🚀 LaunchController.handleLaunchProfile called with:", { profileId: data.profileId, userId: authenticatedUser?.id });
+      
       const { profileId, options = {} } = data;
 
       if (!profileId) {
-        throw new Error("Profile ID là bắt buộc");
+        console.error("❌ Profile ID is missing");
+        throw new Error("El ID del perfil es obligatorio");
       }
 
       if (!authenticatedUser || !authenticatedUser.id) {
-        throw new Error("Không được phép: Không tìm thấy User ID");
+        console.error("❌ User not authenticated");
+        throw new Error("No autorizado: No se encontró el ID de usuario");
       }
 
-      const session = await LaunchService.launchProfile(authenticatedUser.id, profileId, options);
+      console.log(`📞 Calling LaunchService.launchProfile for profile ${profileId}...`);
+      const result = await LaunchService.launchProfile(authenticatedUser.id, profileId.toString(), options);
+      console.log(`✅ LaunchService.launchProfile returned:`, result);
 
       return {
         success: true,
-        sessionId: session.id,
-        message: "Profile đã được khởi chạy thành công",
+        profileId: result.profileId || profileId,
+        sessionId: result.sessionId || result.profileId || profileId,
+        message: result.message || "El perfil se ha iniciado correctamente",
       };
     } catch (error: any) {
-      console.error("Lỗi khi khởi chạy profile:", error);
-      throw new Error(error.message || "Không thể khởi chạy profile");
+      console.error("❌ Error in handleLaunchProfile:", error);
+      throw new Error(error.message || "No se pudo iniciar el perfil");
     }
   }
 
@@ -80,25 +87,25 @@ export class LaunchController {
       const { profileIds, concurrent, options = {} } = data;
 
       if (!profileIds || !Array.isArray(profileIds) || profileIds.length === 0) {
-        throw new Error("Danh sách Profile ID là bắt buộc và phải là mảng không rỗng");
+        throw new Error("La lista de IDs de perfiles es obligatoria y debe ser un array no vacío");
       }
       if (!concurrent || concurrent <= 0) {
-        throw new Error("Số luồng đồng thời phải là số nguyên dương");
+        throw new Error("El número de hilos concurrentes debe ser un entero positivo");
       }
       if (!authenticatedUser || !authenticatedUser.id) {
-        throw new Error("Không được phép: Không tìm thấy User ID");
+        throw new Error("No autorizado: No se encontró el ID de usuario");
       }
 
       const sessions = await LaunchService.launchConcurrentProfiles(authenticatedUser.id, profileIds, concurrent, options);
 
       return {
         success: true,
-        sessions: sessions.map((session) => session.id),
-        message: "Các profile đã được khởi chạy đồng thời",
+        sessions: Array.isArray(sessions) ? sessions.map((session: any) => session.id) : [],
+        message: "Los perfiles se han iniciado simultáneamente",
       };
     } catch (error: any) {
-      console.error("Lỗi khi khởi chạy đồng thời các profile:", error);
-      throw new Error(error.message || "Không thể khởi chạy đồng thời các profile");
+      console.error("Error al iniciar simultáneamente los perfiles:", error);
+      throw new Error(error.message || "No se pudieron iniciar simultáneamente los perfiles");
     }
   }
 
@@ -107,10 +114,10 @@ export class LaunchController {
       const { groupId, concurrent, options = {} } = data;
 
       if (!groupId) {
-        throw new Error("Group ID là bắt buộc");
+        throw new Error("El ID del grupo es obligatorio");
       }
       if (!concurrent || concurrent <= 0) {
-        throw new Error("Số luồng đồng thời phải là số nguyên dương");
+        throw new Error("El número de hilos concurrentes debe ser un entero positivo");
       }
 
       if (!authenticatedUser || !authenticatedUser.id) {
@@ -123,12 +130,12 @@ export class LaunchController {
 
       return {
         success: true,
-        sessions: sessions.map((session) => session.id),
-        message: "Các profile trong group đã được khởi chạy đồng thời",
+        sessions: Array.isArray(sessions) ? sessions.map((session: any) => session.id) : [],
+        message: "Los perfiles del grupo se han iniciado simultáneamente",
       };
     } catch (error: any) {
-      console.error("Lỗi khi khởi chạy đồng thời group profile:", error);
-      throw new Error(error.message || "Không thể khởi chạy đồng thời group profile");
+      console.error("Error al iniciar simultáneamente el grupo de perfiles:", error);
+      throw new Error(error.message || "No se pudo iniciar simultáneamente el grupo de perfiles");
     }
   }
 
@@ -148,7 +155,7 @@ export class LaunchController {
 
       const execution = await LaunchService.executeWorkflowWithProfile(userId, profileId, workflowId, options);
       if (!execution) {
-        throw new Error("Không thể thực thi workflow với profile");
+        throw new Error("No se pudo ejecutar el flujo de trabajo con el perfil");
       }
 
       return {
@@ -157,7 +164,7 @@ export class LaunchController {
         status: execution.status,
       };
     } catch (error: any) {
-      throw new Error(error.message || "Lỗi khi thực thi workflow với profile");
+      throw new Error(error.message || "Error al ejecutar el flujo de trabajo con el perfil");
     }
   }
 
@@ -195,7 +202,7 @@ export class LaunchController {
         })),
       };
     } catch (error: any) {
-      throw new Error(error.message || "Lỗi khi thực thi workflow với danh sách profiles");
+      throw new Error(error.message || "Error al ejecutar el flujo de trabajo con la lista de perfiles");
     }
   }
 
@@ -227,7 +234,7 @@ export class LaunchController {
         })),
       };
     } catch (error: any) {
-      throw new Error(error.message || "Lỗi khi thực thi workflow với profile group");
+      throw new Error(error.message || "Error al ejecutar el flujo de trabajo con el grupo de perfiles");
     }
   }
 
