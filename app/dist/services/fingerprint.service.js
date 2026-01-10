@@ -131,27 +131,23 @@ class FingerprintService {
      */
     static generateRandomFingerprint() {
         // Resolve path correctly for both development and production (Electron)
+        // Try multiple possible locations
         let dataPath = path.join(__dirname, '../data/fingerprint-data.json');
-        
         // If file doesn't exist, try relative to process.cwd()
         if (!fs.existsSync(dataPath)) {
             dataPath = path.join(process.cwd(), 'backend/data/fingerprint-data.json');
         }
-        
         // If still doesn't exist, try dist/data
         if (!fs.existsSync(dataPath)) {
             dataPath = path.join(process.cwd(), 'dist/data/fingerprint-data.json');
         }
-        
         // If still doesn't exist, try app/backend/data
         if (!fs.existsSync(dataPath)) {
             dataPath = path.join(process.cwd(), 'app/backend/data/fingerprint-data.json');
         }
-        
         if (!fs.existsSync(dataPath)) {
             throw new Error(`Fingerprint data file not found. Tried: ${dataPath}`);
         }
-        
         const jsonData = fs.readFileSync(dataPath, 'utf8');
         const fingerprintData = JSON.parse(jsonData);
         // Random fingerprint generation (logic cũ từ controller)

@@ -102,13 +102,13 @@ async function createDefaultUsers() {
         else {
             console.log('👤 Default admin user already exists');
         }
-        // Create demo user
+        // Create demo user with password that meets validation (minimum 6 characters)
         const existingDemo = await UserModel.findByUsername('demo');
         if (!existingDemo) {
             const demoData = {
                 username: 'demo',
                 email: 'demo@localhost',
-                password: 'demo', // Will be hashed by UserModel
+                password: 'demo123', // Changed to meet minimum 6 characters requirement
                 fullName: 'Demo User',
                 role: 'user'
             };
@@ -116,12 +116,26 @@ async function createDefaultUsers() {
             if (demo) {
                 console.log('👤 Demo user created:');
                 console.log('   Username: demo');
-                console.log('   Password: demo');
+                console.log('   Password: demo123');
                 console.log('   Email: demo@localhost');
             }
         }
         else {
             console.log('👤 Demo user already exists');
+            // Update password to meet validation requirements (minimum 6 characters)
+            // This ensures existing demo users can login with the new password
+            try {
+                const updatedDemo = await UserModel.update(existingDemo.id, { password: 'demo123' });
+                if (updatedDemo) {
+                    console.log('✅ Updated demo user password to demo123');
+                    console.log('   Username: demo');
+                    console.log('   Password: demo123');
+                }
+            }
+            catch (updateError) {
+                console.log('⚠️ Could not update demo user password, but user exists');
+                console.error('Update error:', updateError);
+            }
         }
     }
     catch (error) {

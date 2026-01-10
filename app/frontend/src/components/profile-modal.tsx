@@ -230,16 +230,26 @@ export function ProfileModal({
 
   const bulkProxyMethod = bulkForm.watch("proxy");
   const onSubmit = (formData: ProfileFormValues) => {
-    // 1. Tạo payload cơ bản
+    // 1. Validate required fields
+    if (!formData.name || formData.name.trim().length < 2) {
+      console.error("Profile name is required and must be at least 2 characters");
+      individualForm.setError('name', { 
+        type: 'manual', 
+        message: 'Profile name is required and must be at least 2 characters' 
+      });
+      return;
+    }
+
+    // 2. Tạo payload cơ bản
     const payload: CreateProfileData = {
-      name: formData.name,
-      proxySource: formData.proxyMethod as 'none' | 'import', // Ép kiểu nếu cần
+      name: formData.name.trim(),
+      proxySource: (formData.proxyMethod || 'none') as 'none' | 'import',
       // Quan trọng: Ánh xạ proxyHost thành proxyList
       proxyList: formData.proxyMethod === 'import' ? formData.proxyHost : undefined,
-      fingerprintMethod: formData.fingerprintType,
+      fingerprintMethod: formData.fingerprintType || 'random',
     };
 
-    // 2. Thêm các trường fingerprint tùy chỉnh nếu được chọn
+    // 3. Thêm các trường fingerprint tùy chỉnh nếu được chọn
     if (formData.fingerprintType === 'custom') {
       Object.assign(payload, {
         userAgent: formData.userAgent,
@@ -247,35 +257,36 @@ export function ProfileModal({
         language: formData.language,
         timezone: formData.timezone,
         vendor: formData.vendor,
-        renderer: formData.webglRenderer, // Ánh xạ từ webglRenderer
+        renderer: formData.webglRenderer,
         hardwareConcurrency: formData.hardwareConcurrency ? Number(formData.hardwareConcurrency) : undefined,
         deviceMemory: formData.deviceMemory ? Number(formData.deviceMemory) : undefined,
-        canvas: formData.canvasProtection, // Ánh xạ từ canvasProtection
-        webGL: formData.webglNoise,       // Ánh xạ từ webglNoise
+        canvas: formData.canvasProtection,
+        webGL: formData.webglNoise,
         audioContext: formData.audioContext,
-        clientRects: formData.clientRects, // Đổi 'clientRectValue' thành 'clientRects' nếu cần
-        fonts: formData.fontList,          // Ánh xạ từ fontList (boolean)
-        webRtcMode: formData.webRTC as 'real' | 'proxy' | 'disable' | 'custom', // Ép kiểu
+        clientRects: formData.clientRects,
+        fonts: formData.fontList,
+        webRtcMode: formData.webRTC as 'real' | 'proxy' | 'disable' | 'custom',
         webRtcCustomIp: formData.webRTC === 'custom' ? formData.customWebRtcIp : undefined,
       });
     }
 
-    // 3. Loại bỏ các trường undefined để giữ payload sạch sẽ
+    // 4. Loại bỏ các trường undefined để giữ payload sạch sẽ
     Object.keys(payload).forEach(key => (payload as any)[key] === undefined && delete (payload as any)[key]);
 
-    // 4. Gọi hàm onCreate từ props và xử lý kết quả
+    // 5. Gọi hàm onCreate từ props y xử lý kết quả
     console.log("Submitting Individual Payload:", payload);
     onCreate(payload)
       .then(() => {
         // Xử lý thành công: đóng modal, reset form
+        console.log("✅ Profile created successfully");
         onOpenChange(false);
         individualForm.reset();
       })
       .catch(error => {
-        // Xử lý lỗi: hiển thị thông báo lỗi cho người dùng (ví dụ: dùng toast)
-        console.error("Failed to create profile:", error);
-        // Bạn có thể thêm toast ở đây
-        // toast({ title: "Error", description: error.message, variant: "destructive" });
+        // Xử lý lỗi: hiển thị thông báo lỗi cho người dùng
+        console.error("❌ Failed to create profile:", error);
+        const errorMessage = error?.message || error?.toString() || "Failed to create profile";
+        alert(`Error creating profile: ${errorMessage}`);
       });
   };
 

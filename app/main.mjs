@@ -324,8 +324,18 @@ async function makeBackendRequest(method, url, data, headers = {}) {
 
 // Generic IPC handler cho tất cả backend requests với headers support
 ipcMain.handle('backend-request', async (event, method, url, data, headers) => {
-  console.log('✅ makeBackendRequest called with error:', method, url, data, headers);
-  return await makeBackendRequest(method, url, data, headers);
+  console.log('📨 IPC request received:', method, url);
+  if (data) {
+    console.log('📦 Request data:', JSON.stringify(data).substring(0, 200));
+  }
+  try {
+    const result = await makeBackendRequest(method, url, data, headers);
+    console.log('✅ Request successful');
+    return result;
+  } catch (error) {
+    console.error('❌ Request failed:', error);
+    throw error;
+  }
 });
 
 
