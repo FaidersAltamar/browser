@@ -1,4 +1,5 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, Router as WouterRouter } from "wouter";
+import { useHashLocation } from "wouter/use-hash-location";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "./components/ui/toaster";
 import NotFound from "./pages/not-found";
@@ -19,10 +20,13 @@ import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "./hooks/us/useAuth";
 import { BalanceProvider } from "./hooks/us/useBalance";
 
+// Check if running in Electron
+const isElectron = typeof window !== 'undefined' && window.platform?.isElectron === true;
 
 function Router() {
   return (
-    <Switch>
+    <WouterRouter hook={isElectron ? useHashLocation : undefined}>
+      <Switch>
       <Route path="/auth" component={AuthPage} />
       <ProtectedRoute
         path="/"
@@ -114,7 +118,8 @@ function Router() {
         )}
       />
       <Route component={NotFound} />
-    </Switch>
+      </Switch>
+    </WouterRouter>
   );
 }
 

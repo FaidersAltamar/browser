@@ -33,7 +33,7 @@ function createWindow() {
         nodeIntegration: false,
         contextIsolation: true,
         webSecurity: false, // Disable for embedded mode
-        preload: path.join(__dirname, 'preload.js'),
+        preload: path.resolve(__dirname, 'preload.js'),
         allowRunningInsecureContent: true
       },
       show: false, // Don't show until ready
@@ -60,10 +60,10 @@ function createWindow() {
 
   mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL) => {
     console.error('Failed to load content:', errorCode, errorDescription, validatedURL);
-    // Fallback to different port if first fails
+    // Don't try to load from HTTP if file loading fails - show error instead
     if (errorCode === -3 || errorCode === -102) { // ERR_ABORTED or CONNECTION_REFUSED
-      console.log('Trying fallback URL...');
-      mainWindow.loadURL('http://localhost:3000').catch(console.error);
+      console.error('❌ Failed to load from file, not trying HTTP fallback');
+      mainWindow.loadURL('data:text/html,<h1>Error loading application</h1><p>Failed to load: ' + errorDescription + '</p>');
     }
   });
 
@@ -74,33 +74,48 @@ function createWindow() {
 
   // Load the frontend
   try {
-    const isDev = process.env.NODE_ENV === 'development';
+    // Always try to load from built files first
+    const frontendPath = path.join(__dirname, 'frontend', 'dist', 'index.html');
     
-    if (!isDev) {
-      // Development mode: try port 3001 first, then 3000
-      console.log('Loading development frontend from http://localhost:3001');
-      mainWindow.loadURL('http://localhost:3001').catch((err) => {
-        console.error('Failed to load from port 3001:', err);
-        console.log('Trying port 3000...');
-        mainWindow.loadURL('http://localhost:3000');
-      });
-      
-      // Open DevTools in development
-      mainWindow.webContents.openDevTools();
-    } else {
-      // Production mode: load from built files
-      const frontendPath = path.join(__dirname, 'frontend', 'dist', 'index.html');
-      if (fs.existsSync(frontendPath)) {
-        console.log('Loading production build from:', frontendPath);
-        mainWindow.loadFile(frontendPath);
-      } else {
+    console.log('Current __dirname:', __dirname);
+    console.log('Looking for frontend at:', frontendPath);
+    console.log('File exists:', fs.existsSync(frontendPath));
+    
+    if (fs.existsSync(frontendPath)) {
+      console.log('✅ Loading frontend from built files:', frontendPath);
+      // Use absolute path for loadFile
+      mainWindow.loadFile(frontendPath).then(() => {
+        console.log('✅ Frontend loaded successfully');
+      }).catch((err) => {
+        console.error('❌ Failed to load file:', err);
         // Fallback to dev server
-        console.log('Production build not found, falling back to dev server');
-        mainWindow.loadURL('http://localhost:3001');
+        console.log('🔄 Falling back to dev server...');
+        mainWindow.loadURL('http://localhost:3001').catch((err2) => {
+          console.error('❌ Failed to load from dev server:', err2);
+        });
+      });
+    } else {
+      // Fallback to dev server if build doesn't exist
+      console.log('⚠️ Build not found, trying dev server on port 3001...');
+      const isDev = process.env.NODE_ENV === 'development';
+      
+      if (isDev) {
+        mainWindow.loadURL('http://localhost:3001').catch((err) => {
+          console.error('❌ Failed to load from port 3001:', err);
+          console.log('🔄 Trying port 3000...');
+          mainWindow.loadURL('http://localhost:3000').catch((err2) => {
+            console.error('❌ Failed to load from dev server:', err2);
+          });
+        });
+        // Open DevTools in development mode
+        mainWindow.webContents.openDevTools();
+      } else {
+        console.error('❌ Production build not found and not in development mode!');
+        mainWindow.loadURL('data:text/html,<h1>Error: Frontend build not found</h1><p>Please build the frontend first or run in development mode.</p>');
       }
     }
   } catch (error) {
-    console.error('Error loading frontend:', error);
+    console.error('❌ Error loading frontend:', error);
   }
 
   mainWindow.on('closed', () => {

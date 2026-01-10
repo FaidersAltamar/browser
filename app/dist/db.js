@@ -68,7 +68,7 @@ async function initializeDatabase() {
         console.log(`🔍 Checking/Running migrations from: ${migrationsFolder}`);
         await (0, migrator_1.migrate)(exports.db, { migrationsFolder: migrationsFolder }); // <--- Dòng này là rất quan trọng
         console.log('✅ Migrations completed successfully');
-        await createDefaultAdmin();
+        await createDefaultUsers();
         console.log('✅ Database initialized successfully');
         console.log(`📁 Database path: ${dbPath}`);
     }
@@ -77,35 +77,56 @@ async function initializeDatabase() {
         throw error;
     }
 }
-// Create default admin user
-async function createDefaultAdmin() {
+// Create default users (admin and demo)
+async function createDefaultUsers() {
     try {
         const { UserModel } = await Promise.resolve().then(() => __importStar(require('./models/User')));
-        // Check if admin user already exists
-        const existingAdmin = await UserModel.findByUsername('admin');
-        if (existingAdmin) {
-            console.log('👤 Default admin user already exists');
-            return;
-        }
         // Create default admin user
-        const adminData = {
-            username: 'admin',
-            email: 'admin@localhost',
-            password: 'admin123', // Will be hashed by UserModel
-            firstName: 'System',
-            lastName: 'Administrator',
-            role: 'admin',
-            isActive: true
-        };
-        const admin = await UserModel.create(adminData);
-        console.log('👤 Default admin user created:');
-        console.log('   Username: admin');
-        console.log('   Password: admin123');
-        console.log('   Email: admin@localhost');
+        const existingAdmin = await UserModel.findByUsername('admin');
+        if (!existingAdmin) {
+            const adminData = {
+                username: 'admin',
+                email: 'admin@localhost',
+                password: 'admin123', // Will be hashed by UserModel
+                fullName: 'System Administrator',
+                role: 'admin'
+            };
+            const admin = await UserModel.create(adminData);
+            if (admin) {
+                console.log('👤 Default admin user created:');
+                console.log('   Username: admin');
+                console.log('   Password: admin123');
+                console.log('   Email: admin@localhost');
+            }
+        }
+        else {
+            console.log('👤 Default admin user already exists');
+        }
+        // Create demo user
+        const existingDemo = await UserModel.findByUsername('demo');
+        if (!existingDemo) {
+            const demoData = {
+                username: 'demo',
+                email: 'demo@localhost',
+                password: 'demo', // Will be hashed by UserModel
+                fullName: 'Demo User',
+                role: 'user'
+            };
+            const demo = await UserModel.create(demoData);
+            if (demo) {
+                console.log('👤 Demo user created:');
+                console.log('   Username: demo');
+                console.log('   Password: demo');
+                console.log('   Email: demo@localhost');
+            }
+        }
+        else {
+            console.log('👤 Demo user already exists');
+        }
     }
     catch (error) {
-        console.error('❌ Failed to create default admin:', error);
-        // Don't throw - database can still work without default admin
+        console.error('❌ Failed to create default users:', error);
+        // Don't throw - database can still work without default users
     }
 }
 // Graceful shutdown

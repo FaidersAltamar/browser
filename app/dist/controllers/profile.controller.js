@@ -220,7 +220,28 @@ class ProfileController {
     }
     static async handleGetFingerprintData() {
         try {
-            const dataPath = path_1.default.join(__dirname, '../data/fingerprint-data.json');
+            // Resolve path correctly for both development and production (Electron)
+            let dataPath = path_1.default.join(__dirname, '../data/fingerprint-data.json');
+            
+            // If file doesn't exist, try relative to process.cwd()
+            if (!fs_1.default.existsSync(dataPath)) {
+                dataPath = path_1.default.join(process.cwd(), 'backend/data/fingerprint-data.json');
+            }
+            
+            // If still doesn't exist, try dist/data
+            if (!fs_1.default.existsSync(dataPath)) {
+                dataPath = path_1.default.join(process.cwd(), 'dist/data/fingerprint-data.json');
+            }
+            
+            // If still doesn't exist, try app/backend/data
+            if (!fs_1.default.existsSync(dataPath)) {
+                dataPath = path_1.default.join(process.cwd(), 'app/backend/data/fingerprint-data.json');
+            }
+            
+            if (!fs_1.default.existsSync(dataPath)) {
+                throw new Error(`Fingerprint data file not found. Tried: ${dataPath}`);
+            }
+            
             const jsonData = fs_1.default.readFileSync(dataPath, 'utf8');
             const fingerprintData = JSON.parse(jsonData);
             return fingerprintData;
