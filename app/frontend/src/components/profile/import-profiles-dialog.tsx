@@ -16,7 +16,7 @@ import { FileUp, Upload } from "lucide-react";
 // Định nghĩa kiểu dữ liệu mà dialog này sẽ trả về
 export interface ImportPayload {
   fileName: string;
-  fileContent: string; // Nội dung file dưới dạng chuỗi
+  fileContent: string; // Contenido del archivo como cadena
   fileType: string;    // Loại file, ví dụ: 'application/json'
 }
 
@@ -42,27 +42,27 @@ export function ImportProfilesDialog({
     const file = event.target.files?.[0];
     if (file) {
       setSelectedFile(file);
-      setError(null); // Xóa lỗi cũ khi chọn file mới
+      setError(null); // Eliminar error anterior cuando se selecciona un archivo nuevo
     }
   };
 
   const handleImport = () => {
     if (!selectedFile) return;
 
-    // Đọc nội dung file
+    // Leer contenido del archivo
     const reader = new FileReader();
 
     reader.onload = (e) => {
       const fileContent = e.target?.result as string;
       
-      // Tạo payload để gửi về cho component cha
+      // Crear payload para enviar al componente padre
       const payload: ImportPayload = {
         fileName: selectedFile.name,
         fileContent: fileContent,
         fileType: selectedFile.type,
       };
 
-      // Gọi callback do cha cung cấp
+      // Llamar callback proporcionado por el padre
       onImport(payload);
     };
 
@@ -70,11 +70,11 @@ export function ImportProfilesDialog({
       setError("Failed to read the file. Please try again.");
     };
     
-    // Bắt đầu đọc file dưới dạng text
+    // Comenzar a leer el archivo como texto
     reader.readAsText(selectedFile);
   };
   
-  // Reset state khi dialog đóng
+  // Resetear estado cuando se cierra el diálogo
   const handleOpenChange = (newOpen: boolean) => {
     if (!newOpen) {
         setTimeout(() => {

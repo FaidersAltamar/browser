@@ -49,19 +49,19 @@ export function GroupSelectDialog({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Chuẩn bị một "báo cáo" duy nhất và đầy đủ
+    // Preparar un "reporte" único y completo
     const payload: AddToGroupPayload = {
         mode: selectedOption,
         groupId: selectedOption === "existing" ? selectedGroupId : null,
         newGroupName: selectedOption === "new" ? newGroupName.trim() : null,
-        // Lấy đúng mảng ID từ props
+        // Obtener el array correcto de IDs desde props
         itemIds: profileIds, 
     };
 
-    // Gửi "báo cáo" hoàn chỉnh về cho component cha
+    // Enviar "reporte" completo al componente padre
     onAddToGroup(payload);
     
-    // Đóng dialog sau khi gửi
+    // Cerrar diálogo después de enviar
     onOpenChange(false);
 };
 

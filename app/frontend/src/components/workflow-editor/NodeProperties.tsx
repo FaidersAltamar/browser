@@ -2,7 +2,7 @@ import React from 'react';
 import { useWorkflowContext } from '@/context/WorkflowContext';
 import { Settings, X, ChevronDown, Copy, Info } from 'lucide-react';
 
-// Danh sách các mô tả parameter để hiển thị gợi ý
+// Lista de descripciones de parámetros para mostrar sugerencias
 interface ParameterDescription {
   [key: string]: string;
 }

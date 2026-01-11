@@ -27,7 +27,7 @@ const SearchBar = ({ onSearch, value = '' }: SearchBarProps) => {
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
         <Input
           type="text"
-          placeholder="Tìm kiếm ứng dụng..."
+          placeholder="Buscar aplicación..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="pl-10 pr-24 h-12 bg-white border-blue-200 focus:border-blue-500 focus:ring-blue-500 rounded-md w-full"
@@ -37,7 +37,7 @@ const SearchBar = ({ onSearch, value = '' }: SearchBarProps) => {
         type="submit" 
         className="absolute right-0 top-0 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-r-md px-5"
       >
-        Tìm kiếm
+        Buscar
       </Button>
     </form>
   );

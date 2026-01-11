@@ -38,8 +38,8 @@ const ProductGrid = ({
   if (products.length === 0) {
     return (
       <div className="py-16 text-center">
-        <h3 className="text-lg font-medium text-gray-900">Không tìm thấy sản phẩm</h3>
-        <p className="mt-2 text-gray-500">Vui lòng thử tìm kiếm với từ khóa khác hoặc chọn danh mục khác.</p>
+        <h3 className="text-lg font-medium text-gray-900">No se encontraron productos</h3>
+        <p className="mt-2 text-gray-500">Por favor, intenta buscar con otras palabras clave o selecciona otra categoría.</p>
       </div>
     );
   }

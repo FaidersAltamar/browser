@@ -240,16 +240,16 @@ export function ProfileModal({
       return;
     }
 
-    // 2. Tạo payload cơ bản
+    // 2. Crear payload básico
     const payload: CreateProfileData = {
       name: formData.name.trim(),
       proxySource: (formData.proxyMethod || 'none') as 'none' | 'import',
-      // Quan trọng: Ánh xạ proxyHost thành proxyList
+      // Importante: Mapear proxyHost a proxyList
       proxyList: formData.proxyMethod === 'import' ? formData.proxyHost : undefined,
       fingerprintMethod: formData.fingerprintType || 'random',
     };
 
-    // 3. Thêm các trường fingerprint tùy chỉnh nếu được chọn
+    // 3. Agregar campos de fingerprint personalizados si se seleccionan
     if (formData.fingerprintType === 'custom') {
       Object.assign(payload, {
         userAgent: formData.userAgent,
@@ -270,20 +270,20 @@ export function ProfileModal({
       });
     }
 
-    // 4. Loại bỏ các trường undefined để giữ payload sạch sẽ
+    // 4. Eliminar campos undefined para mantener el payload limpio
     Object.keys(payload).forEach(key => (payload as any)[key] === undefined && delete (payload as any)[key]);
 
-    // 5. Gọi hàm onCreate từ props y xử lý kết quả
+    // 5. Llamar función onCreate desde props y manejar resultado
     console.log("Submitting Individual Payload:", payload);
     onCreate(payload)
       .then(() => {
-        // Xử lý thành công: đóng modal, reset form
+        // Manejar éxito: cerrar modal, resetear formulario
         console.log("✅ Profile created successfully");
         onOpenChange(false);
         individualForm.reset();
       })
       .catch(error => {
-        // Xử lý lỗi: hiển thị thông báo lỗi cho người dùng
+        // Manejar error: mostrar mensaje de error al usuario
         console.error("❌ Failed to create profile:", error);
         const errorMessage = error?.message || error?.toString() || "Failed to create profile";
         alert(`Error creating profile: ${errorMessage}`);
@@ -307,25 +307,25 @@ export function ProfileModal({
     const payload: CreateProfileData = {
       count: formData.count ? Number(formData.count) : undefined,
       prefix: formData.prefix,
-      proxySource: proxySourceValue, // Sử dụng giá trị đã được ánh xạ
+      proxySource: proxySourceValue, // Usar valor que ha sido mapeado
       selectedProxyGroup: formData.proxy === 'proxy-group' ? formData.proxyGroupId : undefined,
       proxyList: formData.proxy === 'import' ? formData.proxyList : undefined,
     };
 
 
-    // 2. Loại bỏ các trường undefined
+    // 2. Eliminar campos undefined
     Object.keys(payload).forEach(key => (payload as any)[key] === undefined && delete (payload as any)[key]);
 
-    // 3. Gọi hàm onCreateBulk từ props và xử lý kết quả
+    // 3. Llamar función onCreate desde props y manejar resultado
     console.log("Submitting Bulk Payload:", payload);
     onCreate(payload)
       .then(() => {
-        // Xử lý thành công
+        // Manejar éxito
         onOpenChange(false);
         bulkForm.reset();
       })
       .catch(error => {
-        // Xử lý lỗi
+        // Manejar error
         console.error("Failed to create bulk profiles:", error);
       });
   };
@@ -335,7 +335,7 @@ export function ProfileModal({
   const fingerprintType = individualForm.watch("fingerprintType");
 
 
-  // Xử lý khi thay đổi WebRTC behavior - sử dụng từ props
+  // Manejar cuando cambia el comportamiento WebRTC - usar desde props
   const onWebRtcChange = (value: string) => {
     individualForm.setValue("webRTC", value);
     handleWebRtcChange(value);
@@ -1121,7 +1121,7 @@ export function ProfileModal({
                           accept=".txt,.csv,.xlsx,.xls"
                           className="hidden"
                           onChange={(e) => {
-                            // Xử lý khi người dùng tải file lên
+                            // Manejar cuando el usuario sube un archivo
                             const file = e.target.files?.[0];
                             if (file) {
                               const reader = new FileReader();

@@ -120,7 +120,7 @@ export function ProfileList({
   const isAllSelected = currentItems.length > 0 && selectedProfiles.length === currentItems.length;
   const isSomeSelected = selectedProfiles.length > 0 && selectedProfiles.length < currentItems.length;
   
-  // Những hàm xử lý bulk actions đã được di chuyển sang component cha
+  // Las funciones de manejo de acciones masivas se han movido al componente padre
   
   const getBrowserIcon = (browserType: string) => {
     switch (browserType.toLowerCase()) {

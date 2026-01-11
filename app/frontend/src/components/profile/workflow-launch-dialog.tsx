@@ -33,7 +33,7 @@ interface WorkflowLaunchDialogProps {
   onOpenChange: (open: boolean) => void;
   onLaunch: (payload: LaunchPayload) => void;
   profileIds: string[]; // Các profile ID đang được nhắm đến
-  workflows: Workflow[]; // Danh sách workflow để chọn
+  workflows: Workflow[]; // Lista de workflows para elegir
 }
 
 export function WorkflowLaunchDialog({
@@ -43,14 +43,14 @@ export function WorkflowLaunchDialog({
   profileIds,
   workflows,
 }: WorkflowLaunchDialogProps) {
-  const [selectedWorkflowId, setSelectedWorkflowId] = useState<string>(""); // Rỗng nghĩa là chưa chọn
+  const [selectedWorkflowId, setSelectedWorkflowId] = useState<string>(""); // Vacío significa que aún no se ha seleccionado
   const [threads, setThreads] = useState<number>(1);
   const isSingleProfile = profileIds.length === 1;
 
-  // Cập nhật số luồng khi số lượng profile thay đổi
+  // Actualizar número de hilos cuando cambia la cantidad de perfiles
   useEffect(() => {
-    if (open) { // Chỉ cập nhật khi dialog mở
-      setThreads(isSingleProfile ? 1 : Math.min(profileIds.length, 5)); // Mặc định là 5 hoặc ít hơn
+    if (open) { // Solo actualizar cuando el diálogo está abierto
+      setThreads(isSingleProfile ? 1 : Math.min(profileIds.length, 5)); // Por defecto es 5 o menos
     }
   }, [profileIds, isSingleProfile, open]);
 
@@ -58,14 +58,14 @@ export function WorkflowLaunchDialog({
     e.preventDefault();
     const payload: LaunchPayload = {
       profileIds: profileIds,
-      // Nếu người dùng chọn 'none', workflowId sẽ là null
+      // Si el usuario elige 'none', workflowId será null
       workflowId: selectedWorkflowId === 'none' ? null : selectedWorkflowId,
       threads: threads,
     };
     onLaunch(payload);
   };
 
-  // Reset state khi dialog đóng
+  // Resetear estado cuando se cierra el diálogo
   const handleOpenChange = (newOpen: boolean) => {
     if (!newOpen) {
       setTimeout(() => {
@@ -95,9 +95,9 @@ export function WorkflowLaunchDialog({
                 <SelectValue placeholder="Run without workflow" />
               </SelectTrigger>
               <SelectContent>
-                {/* Lựa chọn "None" */}
+                {/* Opción "None" */}
                 <SelectItem value="none">None - Launch Profile Only</SelectItem>
-                {/* Render danh sách workflow */}
+                {/* Renderizar lista de workflows */}
                 {workflows.map((workflow) => (
                   <SelectItem key={workflow.id} value={workflow.id}>
                     {workflow.name}
