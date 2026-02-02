@@ -1,2 +1,5 @@
-2026/01/10-16:31:12.384 5248 Creating DB C:\Users\faide\Downloads\Antidect_preuba\browser\app\backend\data\profiles\3\Default\Site Characteristics Database since it was missing.
-2026/01/10-16:31:12.400 5248 Reusing MANIFEST C:\Users\faide\Downloads\Antidect_preuba\browser\app\backend\data\profiles\3\Default\Site Characteristics Database/MANIFEST-000001
+2026/02/02-15:42:33.522 5918 Log #3: 2 ops saved to Table #4 OK
+2026/02/02-15:42:33.522 5918 Archiving C:\Users\faide\Downloads\browser\app\backend\data\profiles\3\Default\Site Characteristics Database/000003.log: OK
+2026/02/02-15:42:33.523 5918 Table #4: 2 entries OK
+2026/02/02-15:42:33.523 5918 Archiving C:\Users\faide\Downloads\browser\app\backend\data\profiles\3\Default\Site Characteristics Database/MANIFEST-000001: OK
+2026/02/02-15:42:33.528 5918 **** Repaired leveldb C:\Users\faide\Downloads\browser\app\backend\data\profiles\3\Default\Site Characteristics Database; recovered 1 files; 191 bytes. Some data may have been lost. ****

@@ -1,3 +1,2 @@
-2026/01/10-16:33:40.402 e47c Reusing MANIFEST C:\Users\faide\Downloads\Antidect_preuba\browser\app\backend\data\profiles\3\Default\Session Storage/MANIFEST-000001
-2026/01/10-16:33:40.422 e47c Recovering log #3
-2026/01/10-16:33:40.432 e47c Reusing old log C:\Users\faide\Downloads\Antidect_preuba\browser\app\backend\data\profiles\3\Default\Session Storage/000003.log 
+2026/02/02-15:42:33.607 e764 Creating DB C:\Users\faide\Downloads\browser\app\backend\data\profiles\3\Default\Session Storage since it was missing.
+2026/02/02-15:42:33.625 e764 Reusing MANIFEST C:\Users\faide\Downloads\browser\app\backend\data\profiles\3\Default\Session Storage/MANIFEST-000001

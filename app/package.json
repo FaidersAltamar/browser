@@ -38,6 +38,7 @@
     "wait-on": "^7.0.0"
   },
   "dependencies": {
+    "autoprefixer": "^10.4.24",
     "bcrypt": "^5.1.1",
     "better-sqlite3": "^11.10.0",
     "copyfiles": "^2.4.1",
@@ -59,9 +60,14 @@
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
     "playwright": "^1.40.0",
+    "postcss": "^8.5.6",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "sqlite3": "^5.1.7",
+    "tailwindcss": "^4.1.18",
     "uuid": "^11.1.0",
     "winston": "^3.17.0",
+    "wouter": "^3.9.0",
     "zod": "^3.24.3"
   },
   "build": {
